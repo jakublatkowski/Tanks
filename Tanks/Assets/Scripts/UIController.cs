@@ -42,7 +42,7 @@ public class UIController : MonoBehaviour
 
     public void SetSpecialBarValue(float val)
     {
-        if (val < 1 && val > 0)
+        if (val <= 1 && val >= 0)
             specialBarImage.fillAmount = val;
         else if (val < 0)
         {
