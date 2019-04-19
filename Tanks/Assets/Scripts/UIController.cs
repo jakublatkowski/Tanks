@@ -67,6 +67,12 @@ public class UIController : MonoBehaviour
     }
 
 
+    public void SetScrollbarsDefault()
+    {
+        rightScrollbar.value = 0.5f;
+        leftScrollbar.value = 0.5f;
+    }
+
     public void Update()
     {
         //tylko dla testu
