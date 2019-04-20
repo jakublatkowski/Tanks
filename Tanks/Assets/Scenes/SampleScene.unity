@@ -1745,7 +1745,7 @@ Transform:
   m_GameObject: {fileID: 1969557709}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.3827991, y: -4.2121677, z: 3.751628}
-  m_LocalScale: {x: 5, y: 1, z: 5}
+  m_LocalScale: {x: 100, y: 1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
@@ -1761,6 +1761,7 @@ GameObject:
   - component: {fileID: 2034948110}
   - component: {fileID: 2034948112}
   - component: {fileID: 2034948111}
+  - component: {fileID: 2034948113}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -1824,6 +1825,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2034948109}
   m_CullTransparentMesh: 0
+--- !u!114 &2034948113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034948109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec120111130cff347b2d9e0beab3e9a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollbar: {fileID: 793933584}
 --- !u!1 &2147370451
 GameObject:
   m_ObjectHideFlags: 0
@@ -1970,7 +1984,7 @@ PrefabInstance:
     - target: {fileID: 5150306039183678336, guid: fa2696328e9a2aa4a98106b30c0395ee,
         type: 3}
       propertyPath: accelerationForce
-      value: 1000
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fa2696328e9a2aa4a98106b30c0395ee, type: 3}
