@@ -271,6 +271,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 370208874}
+        m_MethodName: Spawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Spawn
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &176022149
@@ -647,6 +658,7 @@ GameObject:
   - component: {fileID: 370208871}
   - component: {fileID: 370208870}
   - component: {fileID: 370208873}
+  - component: {fileID: 370208874}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -718,6 +730,20 @@ MonoBehaviour:
   rightScrollbar: {fileID: 793933584}
   healthBarImage: {fileID: 789297849}
   specialBarImage: {fileID: 327611573}
+--- !u!114 &370208874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370208869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5a0f74ee3233d49be190bc5dc05789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obj: {fileID: 4420517171850745122, guid: b0b67a07f5ab4dd47a136d80f8a4249e, type: 3}
+  bulletGenerator: {fileID: 1855289792}
 --- !u!1 &476431573
 GameObject:
   m_ObjectHideFlags: 0
@@ -1644,6 +1670,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1741544144}
   m_CullTransparentMesh: 0
+--- !u!1 &1855289792 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4844809433116351766, guid: fa2696328e9a2aa4a98106b30c0395ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 5150306040567179586}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1969557709
 GameObject:
   m_ObjectHideFlags: 0
@@ -1730,8 +1762,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1969557709}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3827991, y: -4.2121677, z: 3.751628}
-  m_LocalScale: {x: 5, y: 1, z: 5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 100, y: 1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
