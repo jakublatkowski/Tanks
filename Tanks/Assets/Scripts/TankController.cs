@@ -22,9 +22,7 @@ public class TankController : MonoBehaviour
         Vector3 rotation = new Vector3(0, (leftForce - rightForce) * rotationSpeed * Time.deltaTime);
 
         tank.transform.Rotate(rotation,Space.Self);
-        tank.GetComponent<Rigidbody>().AddForce(position * accelerationForce * Time.deltaTime, ForceMode.Acceleration);
+        tank.GetComponent<Rigidbody>().AddForce(position * accelerationForce * Time.deltaTime, ForceMode.VelocityChange);
 
-        if (Input.touches.Length == 0)
-            ui.SetScrollbarsDefault();
     }
 }

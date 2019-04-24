@@ -64,6 +64,7 @@ public class UIController : MonoBehaviour
     public float GetRightSrollBarValue()
     {
         return rightScrollbar.value;
+        
     }
 
 
@@ -79,7 +80,6 @@ public class UIController : MonoBehaviour
         SetHealthBarValue(GetRightSrollBarValue());
         SetSpecialBarValue(GetRightSrollBarValue());
     }
-
 
 
 }
