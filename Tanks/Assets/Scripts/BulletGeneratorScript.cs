@@ -13,7 +13,7 @@ public class BulletGeneratorScript : MonoBehaviour
         Rigidbody bullet = tmp.GetComponent<Rigidbody>();
         bullet.velocity = bulletGenerator.transform.forward * 50;
         Rigidbody tank = bulletGenerator.GetComponentInParent<Rigidbody>();
-        tank.velocity += bulletGenerator.transform.forward * -5;
+        tank.velocity = tank.velocity - bulletGenerator.transform.forward * 5;
 
 
         Debug.Log("Spawn");
