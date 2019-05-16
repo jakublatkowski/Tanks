@@ -32,11 +32,13 @@ public class RoomController : MonoBehaviourPunCallbacks
     }
     void ListPlayers()
     {
+        Debug.Log("Room: ");
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             GameObject tmpListing = Instantiate(playerListingPrefab, playersContainer);
             Text tmpText = tmpListing.transform.GetChild(0).GetComponent<Text>();
             tmpText.text = player.NickName;
+            Debug.Log("Gracz: "+ player.NickName);
         }
     }
     public override void OnJoinedRoom()

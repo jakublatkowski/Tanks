@@ -106,10 +106,10 @@ public class UIController : MonoBehaviour
         SetHealthBarValue(GetRightSrollBarValue());
         SetSpecialBarValue(GetRightSrollBarValue());
 
-        if (playerHealthSlider != null)
-        {
-            playerHealthSlider.value = target.Health;
-        }
+        //if (playerHealthSlider != null)
+        //{
+        //    playerHealthSlider.value = target.Health;
+        //}
     }
 
 

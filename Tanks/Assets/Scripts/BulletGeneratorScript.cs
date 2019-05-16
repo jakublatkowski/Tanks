@@ -1,19 +1,27 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class BulletGeneratorScript : MonoBehaviour
 {
-    public GameObject obj;
-    public GameObject bulletGenerator;
-    
+    [SerializeField]
+    public GameObject tank;
+
     public void Spawn()
     {
-        GameObject tmp = Instantiate(obj, bulletGenerator.transform.position, bulletGenerator.transform.rotation);
+        Debug.Log("Probuje strzelic");
+        if (tank.GetComponent<PhotonView>().IsMine == false)
+        {
+            Debug.Log("return przedwczesny");
+            return;
+        }
+        GameObject bulletGenerator = tank.GetComponent("BulletGenerator").gameObject;
+        GameObject tmp = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.transform.position, bulletGenerator.transform.rotation);
         Rigidbody bullet = tmp.GetComponent<Rigidbody>();
         bullet.velocity = bulletGenerator.transform.forward * 50;
-        Rigidbody tank = bulletGenerator.GetComponentInParent<Rigidbody>();
-        tank.velocity = tank.velocity - bulletGenerator.transform.forward * 5;
+        tank.GetComponent<Rigidbody>().velocity = tank.GetComponent<Rigidbody>().velocity - bulletGenerator.transform.forward * 5;
 
 
         Debug.Log("Spawn");
