@@ -12,18 +12,26 @@ public class TankController : MonoBehaviour
 
     public float accelerationForce = 1.0f;
 
+
+    UIController uiController;
+
+    private void Start()
+    {
+        uiController = GetComponentInChildren<UIController>();
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        if (tank.GetComponent<PhotonView>().IsMine == false)
+        if (tank.GetComponent<PhotonView>().IsMine == true)
         {
-            Debug.Log("przedwczesny return");
+            //nie mój czołg nie poruszam
             return;
         }
-        UIController ui = FindObjectOfType<Canvas>().GetComponent<UIController>();
 
-        float leftForce = ui.GetLeftSrollBarValue() - 0.5f;
-        float rightForce = ui.GetRightSrollBarValue() - 0.5f;
+        float leftForce = uiController.GetLeftSrollBarValue() - 0.5f;
+        float rightForce = uiController.GetRightSrollBarValue() - 0.5f;
         Debug.Log("Lewa : " + leftForce);
         Debug.Log("Prwa : " + rightForce);
 
@@ -32,6 +40,5 @@ public class TankController : MonoBehaviour
 
         tank.transform.Rotate(rotation,Space.Self);
         tank.GetComponent<Rigidbody>().AddForce(position * accelerationForce * Time.deltaTime, ForceMode.VelocityChange);
-
     }
 }
