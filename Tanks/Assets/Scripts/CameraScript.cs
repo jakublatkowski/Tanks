@@ -15,7 +15,7 @@ public class CameraScript : MonoBehaviour
         offset = tank.transform.position - transform.position;
 
     }
-    void Update()
+    void LateUpdate()
     {
         float angle = tank.transform.eulerAngles.y;
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
