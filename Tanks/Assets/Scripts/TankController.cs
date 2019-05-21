@@ -19,7 +19,7 @@ public class TankController : MonoBehaviour
 
     private float _leftForce;
     private float _rightForce;
-    private Rigidbody rigidbody;
+    private Rigidbody tankRb;
     #endregion
 
     #region Properties
@@ -52,7 +52,7 @@ public class TankController : MonoBehaviour
 
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        tankRb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -71,7 +71,7 @@ public class TankController : MonoBehaviour
         }
 
         gameObject.transform.Rotate(rotation, Space.Self);
-        rigidbody.AddForce(position * accelerationForce * Time.deltaTime, ForceMode.VelocityChange);
+        tankRb.AddForce(position * accelerationForce * Time.deltaTime, ForceMode.VelocityChange);
     }
 
     public void Shot()
@@ -81,7 +81,7 @@ public class TankController : MonoBehaviour
         Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
 
         bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
-        rigidbody.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
+        tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
     }
 }
 
