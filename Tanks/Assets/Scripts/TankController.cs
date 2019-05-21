@@ -1,44 +1,87 @@
-﻿using Photon.Pun;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+
 
 public class TankController : MonoBehaviour
 {
-    [SerializeField]
-    public GameObject tank;
+    #region Variables
+    public Transform bulletGenerator;
+
+    public GameObject bulletPrefab;
 
     public float rotationSpeed = 1.0f;
 
     public float accelerationForce = 1.0f;
 
+    public float shotForce = 10f;
 
-    UIController uiController;
+    private float _leftForce;
+    private float _rightForce;
+    private Rigidbody rigidbody;
+    #endregion
 
-    private void Start()
+    #region Properties
+    public float LeftForce
     {
-        uiController = GetComponentInChildren<UIController>();
+        set
+        {
+            if (value > 1) _leftForce = 1;
+            else if (value < 0) _leftForce = 0;
+            else
+            {
+                _leftForce = value - .5f;
+            }
+        }
     }
 
+    public float RightForce
+    {
+        set
+        {
+            if (value > 1) _rightForce = 1;
+            else if (value < 0) _rightForce = 0;
+            else
+            {
+                _rightForce = value - .5f;
+            }
+        }
+    }
+    #endregion
+
+    void Start()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (tank.GetComponent<PhotonView>().IsMine == true)
+        Vector3 position;
+        Vector3 rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
+
+        if (_leftForce > 0.1 && _rightForce > 0.1 || _leftForce < -0.1 && _rightForce < -0.1)
         {
-            //nie mój czołg nie poruszam
-            return;
+            position = gameObject.transform.forward * (_leftForce + _rightForce);
+        }
+        else
+        {
+            position = new Vector3();
         }
 
-        float leftForce = uiController.GetLeftSrollBarValue() - 0.5f;
-        float rightForce = uiController.GetRightSrollBarValue() - 0.5f;
-        Debug.Log("Lewa : " + leftForce);
-        Debug.Log("Prwa : " + rightForce);
+        gameObject.transform.Rotate(rotation, Space.Self);
+        rigidbody.AddForce(position * accelerationForce * Time.deltaTime, ForceMode.VelocityChange);
+    }
 
-        Vector3 position = tank.transform.forward * (leftForce + rightForce);
-        Vector3 rotation = new Vector3(0, (leftForce - rightForce) * rotationSpeed * Time.deltaTime);
+    public void Shot()
+    {
+        //tworzenie pocisku
+        GameObject bullet = Instantiate(bulletPrefab, bulletGenerator.position, bulletGenerator.rotation);
+        Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
 
-        tank.transform.Rotate(rotation,Space.Self);
-        tank.GetComponent<Rigidbody>().AddForce(position * accelerationForce * Time.deltaTime, ForceMode.VelocityChange);
+        bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
+        rigidbody.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
     }
 }
+

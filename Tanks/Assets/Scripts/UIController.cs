@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using Photon.Pun;
-using Photon.Pun.Demo.PunBasics;
 
 public class UIController : MonoBehaviour
 {
@@ -28,26 +26,11 @@ public class UIController : MonoBehaviour
     [SerializeField]
     private Image specialBarImage;
 
-    private PlayerManager target;
+
 
     public void Shot()
     {
         Debug.Log("Shot!");
-    }
-
-    public void SetTarget(PlayerManager _target)
-    {
-        if (_target == null)
-        {
-            Debug.LogError("<Color=Red><a>Missing</a></Color> PlayMakerManager target for PlayerUI.SetTarget.", this);
-            return;
-        }
-        // Cache references for efficiency
-        target = _target;
-        if (playerNameText != null)
-        {
-            playerNameText.text = target.photonView.Owner.NickName;
-        }
     }
 
     public void SetHealthBarValue(float val)
