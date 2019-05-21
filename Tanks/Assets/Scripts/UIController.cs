@@ -6,6 +6,14 @@ using UnityEngine.EventSystems;
 
 public class UIController : MonoBehaviour
 {
+    [Tooltip("UI Text to display Player's Name")]
+    [SerializeField]
+    private Text playerNameText;
+    
+    [Tooltip("UI Slider to display Player's Health")]
+    [SerializeField]
+    private Slider playerHealthSlider;
+
     [SerializeField]
     private Scrollbar leftScrollbar;
 
@@ -17,6 +25,8 @@ public class UIController : MonoBehaviour
 
     [SerializeField]
     private Image specialBarImage;
+
+
 
     public void Shot()
     {
@@ -73,12 +83,16 @@ public class UIController : MonoBehaviour
         rightScrollbar.value = 0.5f;
         leftScrollbar.value = 0.5f;
     }
-
     public void Update()
     {
         //tylko dla testu
         SetHealthBarValue(GetRightSrollBarValue());
         SetSpecialBarValue(GetRightSrollBarValue());
+
+        //if (playerHealthSlider != null)
+        //{
+        //    playerHealthSlider.value = target.Health;
+        //}
     }
 
 
