@@ -97,9 +97,9 @@ MonoBehaviour:
   bulletGenerator: {fileID: 1313293622198895283}
   bulletPrefab: {fileID: 4420517171850745122, guid: b0b67a07f5ab4dd47a136d80f8a4249e,
     type: 3}
-  rotationSpeed: 25
+  rotationSpeed: 35
   accelerationForce: 50
-  shotForce: 10
+  shotForce: 80
 --- !u!1 &5150306039503926736
 GameObject:
   m_ObjectHideFlags: 0
