@@ -23,6 +23,14 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public bool TankRaiseBarrel
+    {
+        set
+        {
+            tank.IsBarrelRaising = value;
+        }
+    }
+
     public void TankShot()
     {
         tank.Shot();

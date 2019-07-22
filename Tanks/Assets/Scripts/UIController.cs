@@ -26,13 +26,6 @@ public class UIController : MonoBehaviour
     [SerializeField]
     private Image specialBarImage;
 
-
-
-    public void Shot()
-    {
-        Debug.Log("Shot!");
-    }
-
     public void SetHealthBarValue(float val)
     {
         if (val <= 1 && val >= 0)
@@ -74,7 +67,6 @@ public class UIController : MonoBehaviour
     public float GetRightSrollBarValue()
     {
         return rightScrollbar.value;
-        
     }
 
 
@@ -86,7 +78,7 @@ public class UIController : MonoBehaviour
     public void Update()
     {
         //tylko dla testu
-        SetHealthBarValue(GetRightSrollBarValue());
+        //SetHealthBarValue(GetRightSrollBarValue());
         SetSpecialBarValue(GetRightSrollBarValue());
 
         //if (playerHealthSlider != null)

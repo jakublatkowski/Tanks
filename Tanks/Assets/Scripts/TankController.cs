@@ -8,10 +8,12 @@ public class TankController : MonoBehaviour
 {
     #region Variables
     public Transform bulletGenerator;
+    public Barrel barrel;
 
     public GameObject bulletPrefab;
 
     public float rotationSpeed = 1.0f;
+    public float barrelRotationSpeed = 1.0f;
 
     public float accelerationForce = 1.0f;
 
@@ -20,6 +22,9 @@ public class TankController : MonoBehaviour
     private float _leftForce;
     private float _rightForce;
     private Rigidbody tankRb;
+
+    public float healthPoints = 100;
+    public UIController ui;
     #endregion
 
     #region Properties
@@ -48,11 +53,17 @@ public class TankController : MonoBehaviour
             }
         }
     }
+
+    public float HealthPoints => healthPoints;
+
+    public bool IsBarrelRaising { get; set; }
     #endregion
 
     void Start()
     {
         tankRb = GetComponent<Rigidbody>();
+        ui.SetHealthBarValue(1);
+        IsBarrelRaising = false;
     }
 
     // Update is called once per frame
@@ -72,6 +83,15 @@ public class TankController : MonoBehaviour
 
         gameObject.transform.Rotate(rotation, Space.Self);
         tankRb.AddForce(position * accelerationForce * Time.deltaTime, ForceMode.VelocityChange);
+       
+        if(IsBarrelRaising)
+        {
+            barrel.Raise();
+        }
+        else
+        {
+            barrel.LowerDownToNormal();
+        }
     }
 
     public void Shot()
@@ -83,5 +103,25 @@ public class TankController : MonoBehaviour
         bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
         tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
     }
-}
 
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Bullet"))
+        {
+            Destroy(collision.collider);
+
+            var hitPoints = collision.gameObject.GetComponent<Bullet>().HitPoints;
+            healthPoints -= hitPoints;
+
+            ui.SetHealthBarValue(healthPoints / 100f);
+          
+            if(healthPoints <= 0)
+            {
+                //do sth 
+                Debug.Log("You Are Dead Man!");
+            }
+
+            Destroy(collision.gameObject);
+        }
+    }
+}
