@@ -115,7 +115,7 @@ public class TankController : MonoBehaviour
         bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
         tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
-        ui.PlayShootingLagAnimation();
+        ui.PlayShootingDelayAnimation();
         _timeToActivateShooting = Time.time + 1;
         _isShootingActive = false;
     }

@@ -72,7 +72,7 @@ public class UIController : MonoBehaviour
         return rightScrollbar.value;
     }
 
-    public void PlayShootingLagAnimation()
+    public void PlayShootingDelayAnimation()
     {
         shootingLagPanel.SetActive(false);
         shootingLagPanel.SetActive(true);
