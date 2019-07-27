@@ -25,6 +25,9 @@ public class TankController : MonoBehaviour
 
     public float healthPoints = 100;
     public UIController ui;
+
+    private bool _isShootingActive;
+    private float _timeToActivateShooting;
     #endregion
 
     #region Properties
@@ -64,6 +67,8 @@ public class TankController : MonoBehaviour
         tankRb = GetComponent<Rigidbody>();
         ui.SetHealthBarValue(1);
         IsBarrelRaising = false;
+        _isShootingActive = true;
+        _timeToActivateShooting = 0;
     }
 
     // Update is called once per frame
@@ -92,16 +97,27 @@ public class TankController : MonoBehaviour
         {
             barrel.LowerDownToNormal();
         }
+
+        if(!_isShootingActive && _timeToActivateShooting <= Time.time)
+        {
+            _isShootingActive = true;
+        }
     }
 
     public void Shot()
     {
+        if (!_isShootingActive) return;
+
         //tworzenie pocisku
         GameObject bullet = Instantiate(bulletPrefab, bulletGenerator.position, bulletGenerator.rotation);
         Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
 
         bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
         tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
+
+        ui.PlayShootingLagAnimation();
+        _timeToActivateShooting = Time.time + 1;
+        _isShootingActive = false;
     }
 
     public void OnCollisionEnter(Collision collision)
