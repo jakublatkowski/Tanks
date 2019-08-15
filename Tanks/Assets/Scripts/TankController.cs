@@ -14,6 +14,7 @@ public class TankController : MonoBehaviour
 
     public float rotationSpeed = 1.0f;
     public float barrelRotationSpeed = 1.0f;
+<<<<<<< HEAD
 
     public float accelerationForce = 1.0f;
 
@@ -25,6 +26,22 @@ public class TankController : MonoBehaviour
 
     public float healthPoints = 100;
     public UIController ui;
+=======
+
+    public float accelerationForce = 1.0f;
+
+    public float shotForce = 10f;
+
+    private float _leftForce;
+    private float _rightForce;
+    private Rigidbody tankRb;
+
+    public float healthPoints = 100;
+    public UIController ui;
+
+    private bool _isShootingActive;
+    private float _timeToActivateShooting;
+>>>>>>> parent of 3c47ef2... Add special shooting mechanic
     #endregion
 
     #region Properties
@@ -64,6 +81,11 @@ public class TankController : MonoBehaviour
         tankRb = GetComponent<Rigidbody>();
         ui.SetHealthBarValue(1);
         IsBarrelRaising = false;
+<<<<<<< HEAD
+=======
+        _isShootingActive = true;
+        _timeToActivateShooting = 0;
+>>>>>>> parent of 3c47ef2... Add special shooting mechanic
     }
 
     // Update is called once per frame
@@ -92,16 +114,36 @@ public class TankController : MonoBehaviour
         {
             barrel.LowerDownToNormal();
         }
+<<<<<<< HEAD
+=======
+
+        if(!_isShootingActive && _timeToActivateShooting <= Time.time)
+        {
+            _isShootingActive = true;
+        }
+>>>>>>> parent of 3c47ef2... Add special shooting mechanic
     }
 
     public void Shot()
     {
+<<<<<<< HEAD
+=======
+        if (!_isShootingActive) return;
+
+>>>>>>> parent of 3c47ef2... Add special shooting mechanic
         //tworzenie pocisku
         GameObject bullet = Instantiate(bulletPrefab, bulletGenerator.position, bulletGenerator.rotation);
         Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
 
         bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
         tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
+<<<<<<< HEAD
+=======
+
+        ui.PlayShootingDelayAnimation();
+        _timeToActivateShooting = Time.time + 1;
+        _isShootingActive = false;
+>>>>>>> parent of 3c47ef2... Add special shooting mechanic
     }
 
     public void OnCollisionEnter(Collision collision)
