@@ -96,14 +96,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletGenerator: {fileID: 1313293622198895283}
   barrel: {fileID: 0}
+  ui: {fileID: 8438167791301280348, guid: 3c8bf8e2a60b4fe46b309fad0c969162, type: 3}
   bulletPrefab: {fileID: 4420517171850745122, guid: b0b67a07f5ab4dd47a136d80f8a4249e,
     type: 3}
   rotationSpeed: 35
-  barrelRotationSpeed: 1
   accelerationForce: 50
   shotForce: 80
   healthPoints: 100
-  ui: {fileID: 8438167791301280348, guid: 3c8bf8e2a60b4fe46b309fad0c969162, type: 3}
+  maxSpecialBulletCount: 50
+  maxTimeSpecialActive: 50
 --- !u!1 &5150306039503926736
 GameObject:
   m_ObjectHideFlags: 0
