@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Text
   - Bullet
-  - Special
   layers:
   - Default
   - TransparentFX
