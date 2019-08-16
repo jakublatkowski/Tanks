@@ -439,7 +439,8 @@ MonoBehaviour:
   raisingSpeed: 1.5
   loweringSpeed: 3
   maxAngle: 60
-  minAngle: 90
+  minAngle: 0
+  angleOffset: 1
   rotationPoint: {fileID: 1819393593}
 --- !u!1 &533973428
 GameObject:
@@ -861,6 +862,11 @@ PrefabInstance:
         type: 3}
       propertyPath: maxTimeSpecialActive
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150306039183678336, guid: fa2696328e9a2aa4a98106b30c0395ee,
+        type: 3}
+      propertyPath: maxSpecialBulletCount
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5150306039183678339, guid: fa2696328e9a2aa4a98106b30c0395ee,
         type: 3}

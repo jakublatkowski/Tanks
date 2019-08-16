@@ -36,7 +36,6 @@ public class Barrel : MonoBehaviour
         currentLoweringSpeed += 0.02f * currentLoweringSpeed;
 
         var angle = Quaternion.Angle(gameObject.transform.rotation, rotationPoint.transform.rotation);
-        Debug.Log(angle);
         if (angle > minAngle + angleOffset) 
         {
             transform.RotateAround(rotationPoint.position, transform.right, currentLoweringSpeed * Time.deltaTime);

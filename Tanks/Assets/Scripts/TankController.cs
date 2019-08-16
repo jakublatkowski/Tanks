@@ -8,7 +8,7 @@ using UnityEngine;
 public class TankController : MonoBehaviour
 {
     #region Variables
-    [Header("Components")]
+    [Header("Required Components")]
     public Transform bulletGenerator;
     public Barrel barrel;
     public UIController ui;
@@ -16,12 +16,12 @@ public class TankController : MonoBehaviour
     [Header("Prefabs")]
     public GameObject bulletPrefab;
 
-    [Header("Control properties")]
+    [Header("Control Properties")]
     public float rotationSpeed = 1.0f;
     public float accelerationForce = 1.0f;
     public float shotForce = 10f;
 
-    [Header("Health properties")]
+    [Header("Health Properties")]
     public float healthPoints = 100;
 
     [Header("Special Properties")]
@@ -132,6 +132,10 @@ public class TankController : MonoBehaviour
         if (!_isShootingActive) return;
 
         StartCoroutine(SpawnAndStartBullet(_isSpecialActive ? maxSpecialBulletCount : 1));
+
+        ui.PlayShootingDelayAnimation();
+        _timeToActivateShooting = Time.time + 1;
+        _isShootingActive = false;
     }
 
     private IEnumerator SpawnAndStartBullet(int bulletsToSpawn)
@@ -147,10 +151,6 @@ public class TankController : MonoBehaviour
 
             yield return new WaitForSeconds(.1f);
         }
-
-        ui.PlayShootingDelayAnimation();
-        _timeToActivateShooting = Time.time + 1;
-        _isShootingActive = false;
     }
 
     public void OnCollisionEnter(Collision collision)

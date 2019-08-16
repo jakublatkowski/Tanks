@@ -104,7 +104,7 @@ MonoBehaviour:
   accelerationForce: 50
   shotForce: 80
   healthPoints: 100
-  maxSpecialBulletCount: 50
+  maxSpecialBulletCount: 20
   maxTimeSpecialActive: 50
 --- !u!1 &5150306039503926736
 GameObject:
