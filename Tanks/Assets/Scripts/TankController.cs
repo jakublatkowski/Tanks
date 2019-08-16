@@ -1,47 +1,46 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 
 public class TankController : MonoBehaviour
 {
     #region Variables
+    [Header("Required Components")]
     public Transform bulletGenerator;
     public Barrel barrel;
+    public UIController ui;
 
+    [Header("Prefabs")]
     public GameObject bulletPrefab;
 
+    [Header("Control Properties")]
     public float rotationSpeed = 1.0f;
-    public float barrelRotationSpeed = 1.0f;
-<<<<<<< HEAD
-
     public float accelerationForce = 1.0f;
-
     public float shotForce = 10f;
 
-    private float _leftForce;
-    private float _rightForce;
-    private Rigidbody tankRb;
-
+    [Header("Health Properties")]
     public float healthPoints = 100;
-    public UIController ui;
-=======
 
-    public float accelerationForce = 1.0f;
+    [Header("Special Properties")]
+    public int maxSpecialBulletCount = 50;
+    public float maxTimeSpecialActive = 50;
 
-    public float shotForce = 10f;
-
-    private float _leftForce;
-    private float _rightForce;
-    private Rigidbody tankRb;
-
-    public float healthPoints = 100;
-    public UIController ui;
-
+    // activators
     private bool _isShootingActive;
+    private bool _isSpecialActive;
+
+    // timestamps
     private float _timeToActivateShooting;
->>>>>>> parent of 3c47ef2... Add special shooting mechanic
+    private float timeSpecialActivated;
+
+    // forces
+    private float _leftForce;
+    private float _rightForce;
+
+    private Rigidbody tankRb;
     #endregion
 
     #region Properties
@@ -80,19 +79,18 @@ public class TankController : MonoBehaviour
     {
         tankRb = GetComponent<Rigidbody>();
         ui.SetHealthBarValue(1);
+        ui.SetSpecialBarValue(0);
         IsBarrelRaising = false;
-<<<<<<< HEAD
-=======
         _isShootingActive = true;
+        _isSpecialActive = false;
         _timeToActivateShooting = 0;
->>>>>>> parent of 3c47ef2... Add special shooting mechanic
     }
 
     // Update is called once per frame
     void Update()
     {
         Vector3 position;
-        Vector3 rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
+        var rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
 
         if (_leftForce > 0.1 && _rightForce > 0.1 || _leftForce < -0.1 && _rightForce < -0.1)
         {
@@ -114,36 +112,45 @@ public class TankController : MonoBehaviour
         {
             barrel.LowerDownToNormal();
         }
-<<<<<<< HEAD
-=======
 
         if(!_isShootingActive && _timeToActivateShooting <= Time.time)
         {
             _isShootingActive = true;
         }
->>>>>>> parent of 3c47ef2... Add special shooting mechanic
+
+        if (_isSpecialActive)
+        {
+            var specialBarValue = (Time.time - timeSpecialActivated) / maxTimeSpecialActive;
+            ui.SetSpecialBarValue(1 - specialBarValue);
+
+            if (specialBarValue >= 1) _isSpecialActive = false;
+        }
     }
 
     public void Shot()
     {
-<<<<<<< HEAD
-=======
         if (!_isShootingActive) return;
 
->>>>>>> parent of 3c47ef2... Add special shooting mechanic
-        //tworzenie pocisku
-        GameObject bullet = Instantiate(bulletPrefab, bulletGenerator.position, bulletGenerator.rotation);
-        Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
-
-        bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
-        tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
-<<<<<<< HEAD
-=======
+        StartCoroutine(SpawnAndStartBullet(_isSpecialActive ? maxSpecialBulletCount : 1));
 
         ui.PlayShootingDelayAnimation();
         _timeToActivateShooting = Time.time + 1;
         _isShootingActive = false;
->>>>>>> parent of 3c47ef2... Add special shooting mechanic
+    }
+
+    private IEnumerator SpawnAndStartBullet(int bulletsToSpawn)
+    {
+        for (var i = 0; i < bulletsToSpawn; i++)
+        {
+            //tworzenie pocisku
+            GameObject bullet = Instantiate(bulletPrefab, bulletGenerator.position, bulletGenerator.rotation);
+            Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
+
+            bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
+            tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
+
+            yield return new WaitForSeconds(.1f);
+        }
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -164,6 +171,16 @@ public class TankController : MonoBehaviour
             }
 
             Destroy(collision.gameObject);
+        }
+
+        if (collision.gameObject.tag.Equals("Special"))
+        {
+            Destroy(collision.gameObject);
+
+            ui.SetSpecialBarValue(1f);
+
+            _isSpecialActive = true;
+            timeSpecialActivated = Time.time;
         }
     }
 }

@@ -367,7 +367,8 @@ MonoBehaviour:
   raisingSpeed: 1.5
   loweringSpeed: 3
   maxAngle: 60
-  minAngle: 90
+  minAngle: 0
+  angleOffset: 1
   rotationPoint: {fileID: 1819393593}
 --- !u!4 &816891355 stripped
 Transform:
@@ -639,6 +640,16 @@ PrefabInstance:
       propertyPath: barrel
       value: 
       objectReference: {fileID: 498047262}
+    - target: {fileID: 5150306039183678336, guid: fa2696328e9a2aa4a98106b30c0395ee,
+        type: 3}
+      propertyPath: maxTimeSpecialActive
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150306039183678336, guid: fa2696328e9a2aa4a98106b30c0395ee,
+        type: 3}
+      propertyPath: maxSpecialBulletCount
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5150306039183678339, guid: fa2696328e9a2aa4a98106b30c0395ee,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1450,8 +1461,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee0f0016e74e5d14295db2ece39a7072, type: 3}
-<<<<<<< HEAD
-=======
 --- !u!224 &8438167791066309785
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2988,4 +2997,3 @@ Transform:
   m_Father: {fileID: 8438167792905622876}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> parent of 3c47ef2... Add special shooting mechanic
