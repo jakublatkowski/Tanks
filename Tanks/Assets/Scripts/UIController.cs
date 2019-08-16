@@ -26,6 +26,9 @@ public class UIController : MonoBehaviour
     [SerializeField]
     private Image specialBarImage;
 
+    [SerializeField]
+    private GameObject shootingLagPanel;
+
     public void SetHealthBarValue(float val)
     {
         if (val <= 1 && val >= 0)
@@ -69,6 +72,11 @@ public class UIController : MonoBehaviour
         return rightScrollbar.value;
     }
 
+    public void PlayShootingDelayAnimation()
+    {
+        shootingLagPanel.SetActive(false);
+        shootingLagPanel.SetActive(true);
+    }
 
     public void SetScrollbarsDefault()
     {
@@ -77,14 +85,6 @@ public class UIController : MonoBehaviour
     }
     public void Update()
     {
-        //tylko dla testu
-        //SetHealthBarValue(GetRightSrollBarValue());
-        SetSpecialBarValue(GetRightSrollBarValue());
-
-        //if (playerHealthSlider != null)
-        //{
-        //    playerHealthSlider.value = target.Health;
-        //}
     }
 
 
