@@ -43,7 +43,7 @@ public class TankController : MonoBehaviour
     // activators
     private bool _isShootingActive;
     private bool _isSpecialActive;
-    public bool _isGravityActive;
+    private bool _isGravityActive;
 
     // timestamps
     private float _timeToActivateShooting;
@@ -215,7 +215,6 @@ public class TankController : MonoBehaviour
         gameObject.transform.Rotate(rotation, Space.Self);
         var force = position * accelerationForce * Time.deltaTime;
 
-        Debug.Log($"Force Magnitude: {force.magnitude}");
         tankRb.AddForce(force, ForceMode.VelocityChange);
     }
     
