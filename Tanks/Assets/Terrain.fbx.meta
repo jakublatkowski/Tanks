@@ -1,32 +1,22 @@
 fileFormatVersion: 2
-guid: 7022dbc67ee13474093b90e19178589a
+guid: 6e789763b925e1c42a4f343f2dc96fda
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: Camera
-    100002: Light
-    100004: Quad Sphere
-    100006: //RootNode
-    400000: Camera
-    400002: Light
-    400004: Quad Sphere
-    400006: //RootNode
-    2000000: Camera
-    2100000: Material
-    2300000: Quad Sphere
-    3300000: Quad Sphere
-    4300000: Quad Sphere
-    10800000: Light
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 25fe70da697700b459436779b425585f, type: 2}
+    100000: //RootNode
+    400000: //RootNode
+    2100000: Mud
+    2100002: Grass
+    2100004: HighGround
+    2100006: Cliff
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Map
+  externalObjects: {}
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
-    materialSearch: 0
+    materialSearch: 1
     materialLocation: 1
   animations:
     legacyGenerateAnimations: 4

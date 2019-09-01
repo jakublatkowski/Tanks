@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 
@@ -21,6 +22,17 @@ public class TankController : MonoBehaviour
     public float accelerationForce = 1.0f;
     public float shotForce = 10f;
 
+    [Header("Gravity Settings")]
+    public float gravityForce = 10f;
+    public Vector3 centerOfMassOffset = new Vector3(0,-0.5f,0);
+
+    [Header("Camera Properties")]
+    public float cameraDistance = 10f;
+    [Range(0f, 1f)]
+    public float cameraPositionYRatio = .5f;
+    [Range(0f, 1f)]
+    public float cameraPositionZRatio = .5f;
+
     [Header("Health Properties")]
     public float healthPoints = 100;
 
@@ -31,6 +43,7 @@ public class TankController : MonoBehaviour
     // activators
     private bool _isShootingActive;
     private bool _isSpecialActive;
+    public bool _isGravityActive;
 
     // timestamps
     private float _timeToActivateShooting;
@@ -41,6 +54,7 @@ public class TankController : MonoBehaviour
     private float _rightForce;
 
     private Rigidbody tankRb;
+    private Vector3 baseCenterOfMass;
     #endregion
 
     #region Properties
@@ -75,11 +89,16 @@ public class TankController : MonoBehaviour
     public bool IsBarrelRaising { get; set; }
     #endregion
 
+    #region UnityMethodsOverride
     void Start()
     {
         tankRb = GetComponent<Rigidbody>();
+        baseCenterOfMass = tankRb.centerOfMass;
+        tankRb.centerOfMass += centerOfMassOffset;
+
         ui.SetHealthBarValue(1);
         ui.SetSpecialBarValue(0);
+
         IsBarrelRaising = false;
         _isShootingActive = true;
         _isSpecialActive = false;
@@ -89,22 +108,9 @@ public class TankController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 position;
-        var rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
+        if (_isGravityActive) Moving();
 
-        if (_leftForce > 0.1 && _rightForce > 0.1 || _leftForce < -0.1 && _rightForce < -0.1)
-        {
-            position = gameObject.transform.forward * (_leftForce + _rightForce);
-        }
-        else
-        {
-            position = new Vector3();
-        }
-
-        gameObject.transform.Rotate(rotation, Space.Self);
-        tankRb.AddForce(position * accelerationForce * Time.deltaTime, ForceMode.VelocityChange);
-       
-        if(IsBarrelRaising)
+        if (IsBarrelRaising)
         {
             barrel.Raise();
         }
@@ -126,7 +132,93 @@ public class TankController : MonoBehaviour
             if (specialBarValue >= 1) _isSpecialActive = false;
         }
     }
+    void FixedUpdate()
+    {
+        // Calculate better gravity, when we don't touch ground.
+        if (!_isGravityActive)
+        {
+            // Disable Unitys gravity
+            tankRb.useGravity = false;
+            // And enable Better Gravity
+            tankRb.AddForce(Physics.gravity * gravityForce * gravityForce);
+        }
+        else
+        {
+            tankRb.useGravity = true;
+        }
 
+        tankRb.centerOfMass = baseCenterOfMass + centerOfMassOffset;
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Bullet"))
+        {
+            Destroy(collision.collider);
+
+            var hitPoints = collision.gameObject.GetComponent<Bullet>().HitPoints;
+            healthPoints -= hitPoints;
+
+            ui.SetHealthBarValue(healthPoints / 100f);
+
+            if (healthPoints <= 0)
+            {
+                //do sth 
+                Debug.Log("You Are Dead Man!");
+            }
+
+            Destroy(collision.gameObject);
+        }
+
+        if (collision.gameObject.tag.Equals("Special"))
+        {
+            Destroy(collision.gameObject);
+
+            ui.SetSpecialBarValue(1f);
+
+            _isSpecialActive = true;
+            timeSpecialActivated = Time.time;
+        }
+    }
+
+    public void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Map"))
+        {
+            _isGravityActive = true;
+        }
+    }
+
+    public void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Map"))
+        {
+            _isGravityActive = false;
+        }
+    }
+    #endregion
+
+    private void Moving()
+    {
+        Vector3 position;
+        var rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
+
+        if (_leftForce > 0.1 && _rightForce > 0.1 || _leftForce < -0.1 && _rightForce < -0.1)
+        {
+            position = gameObject.transform.forward * (_leftForce + _rightForce);
+        }
+        else
+        {
+            position = new Vector3();
+        }
+
+        gameObject.transform.Rotate(rotation, Space.Self);
+        var force = position * accelerationForce * Time.deltaTime;
+
+        Debug.Log($"Force Magnitude: {force.magnitude}");
+        tankRb.AddForce(force, ForceMode.VelocityChange);
+    }
+    
     public void Shot()
     {
         if (!_isShootingActive) return;
@@ -150,37 +242,6 @@ public class TankController : MonoBehaviour
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
             yield return new WaitForSeconds(.1f);
-        }
-    }
-
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag.Equals("Bullet"))
-        {
-            Destroy(collision.collider);
-
-            var hitPoints = collision.gameObject.GetComponent<Bullet>().HitPoints;
-            healthPoints -= hitPoints;
-
-            ui.SetHealthBarValue(healthPoints / 100f);
-          
-            if(healthPoints <= 0)
-            {
-                //do sth 
-                Debug.Log("You Are Dead Man!");
-            }
-
-            Destroy(collision.gameObject);
-        }
-
-        if (collision.gameObject.tag.Equals("Special"))
-        {
-            Destroy(collision.gameObject);
-
-            ui.SetSpecialBarValue(1f);
-
-            _isSpecialActive = true;
-            timeSpecialActivated = Time.time;
         }
     }
 }
