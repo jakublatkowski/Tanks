@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class StartGameScript : MonoBehaviour
 {
+    public GameObject tank;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +16,6 @@ public class StartGameScript : MonoBehaviour
     // Update is called once per frame
     private void CreatePlayer()
     {
-        Debug.Log("Tworze czolg");
-        PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Tank"), Vector3.zero, Quaternion.identity);
+        tank = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Tank"), Vector3.zero, Quaternion.identity);
     }
 }

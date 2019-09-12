@@ -32,19 +32,15 @@ public class RoomController : MonoBehaviourPunCallbacks
     }
     void ListPlayers()
     {
-        Debug.Log("Room: ");
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             GameObject tmpListing = Instantiate(playerListingPrefab, playersContainer);
             Text tmpText = tmpListing.transform.GetChild(0).GetComponent<Text>();
             tmpText.text = player.NickName;
-            Debug.Log("Gracz: "+ player.NickName);
         }
     }
     public override void OnJoinedRoom()
     {
-        PlayerPrefs.SetString("Type", "Klient");
-        PlayerPrefs.SetString("Name", PhotonNetwork.NickName);
         roomPanel.SetActive(true);
         lobbyPanel.SetActive(false);
         roomName.text = PhotonNetwork.CurrentRoom.Name;
@@ -80,7 +76,6 @@ public class RoomController : MonoBehaviourPunCallbacks
         {
             PlayerPrefs.SetString("Type", "Serwer");
             PhotonNetwork.CurrentRoom.IsOpen = true; // tylko dla debuggingu
-            //PhotonNetwork.CurrentRoom.IsOpen = false; 
             PhotonNetwork.LoadLevel("GameScene");
         }
     }

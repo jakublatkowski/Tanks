@@ -58,20 +58,17 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     }
     public void JoinLobbyOnClick()
     {
-        Debug.Log("Bede sie laczyl do lobby");
         mainPanel.SetActive(false);
         lobbyPanel.SetActive(true);
         PhotonNetwork.JoinLobby();
     } 
     public override void OnJoinedLobby()
     {
-        Debug.Log("Polaczylem sie z lobby");
         roomCreateButton.SetActive(true);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log("RoomListing wypelniany przez zmiane listy");
         foreach (var item in roomListings)
         {
             roomListings.Remove(item);
@@ -100,7 +97,6 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     }
     void ListRoom(RoomInfo room)
     {
-        Debug.Log("Listuje roomy");
         GameObject tmpListing = Instantiate(roomListingPrefab, roomContainer);
         RoomButton tmpButton = tmpListing.GetComponent<RoomButton>();
         tmpButton.SetRoom(room.Name, room.MaxPlayers, room.PlayerCount);
@@ -108,23 +104,16 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
 
     public void OnRoomNameChanged(string nameIn)
     {
-        Debug.Log("Zmiana nazwy pokoju");
         roomName = nameIn;
     }
     public void OnRoomSizeChanged(string sizeIn)
     {
-        Debug.Log("Zmienila sie ilosc osob w pokoju");
         roomSize = int.Parse(sizeIn);
     }
     public void CreateRoom()
     {
-        Debug.Log("Tworze pokoj");
         RoomOptions roomOpt = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize };
         PhotonNetwork.CreateRoom(roomName, roomOpt);
-    }
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-       Debug.Log("Probowalem tworzyc room ale: " + message);
     }
     public void MatchingCancel()
     {

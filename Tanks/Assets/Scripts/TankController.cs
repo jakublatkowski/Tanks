@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class TankController : MonoBehaviour
     #region Variables
     public Transform bulletGenerator;
 
-    public GameObject bulletPrefab;
+    public string name;
 
     public float rotationSpeed = 1.0f;
 
@@ -58,6 +59,7 @@ public class TankController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!tankRb.GetComponent<PhotonView>().IsMine) return;
         Vector3 position;
         Vector3 rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
 
@@ -76,8 +78,9 @@ public class TankController : MonoBehaviour
 
     public void Shot()
     {
+        if (!tankRb.GetComponent<PhotonView>().IsMine) return;
         //tworzenie pocisku
-        GameObject bullet = Instantiate(bulletPrefab, bulletGenerator.position, bulletGenerator.rotation);
+        GameObject bullet = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
         Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
 
         bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
