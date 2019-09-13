@@ -44,15 +44,16 @@ public class CameraScript : MonoBehaviour
         transform.LookAt(targetPosition);
     }
 
-    private void SetUpCameraPosition(Transform tankControllerTransform)
+    private void SetUpCameraPosition(Transform tankTransform)
     {
+        TankController tankController = tank.GetComponent<TankController>();
         transform.position = new Vector3
         {
-            x = tankControllerTransform.position.x,
-            y = tankControllerTransform.position.y + tankController.cameraDistance * tankController.cameraPositionYRatio,
-            z = tankControllerTransform.position.z - tankController.cameraDistance *  tankController.cameraPositionZRatio
+            x = tankTransform.position.x,
+            y = tankTransform.position.y + tankController.cameraDistance * tankController.cameraPositionYRatio,
+            z = tankTransform.position.z - tankController.cameraDistance * tankController.cameraPositionZRatio
         };
 
-        offset = tankControllerTransform.transform.position - transform.position;
+        offset = tankTransform.transform.position - transform.position;
     }
 }

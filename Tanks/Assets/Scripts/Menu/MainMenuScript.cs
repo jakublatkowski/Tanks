@@ -112,6 +112,10 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     }
     public void CreateRoom()
     {
+        if (roomSize == 0)
+            roomSize = 2;
+        if (roomName == null)
+            roomName = PhotonNetwork.NickName + "'s Room";
         RoomOptions roomOpt = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize };
         PhotonNetwork.CreateRoom(roomName, roomOpt);
     }
