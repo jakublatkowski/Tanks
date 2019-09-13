@@ -1,3 +1,4 @@
+﻿using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -163,7 +164,7 @@ public class TankController : MonoBehaviour
 
             if (healthPoints <= 0)
             {
-                //do sth 
+                //do sth
                 Debug.Log("You Are Dead Man!");
             }
 
@@ -200,6 +201,7 @@ public class TankController : MonoBehaviour
 
     private void Moving()
     {
+        if (!tankRb.GetComponent<PhotonView>().IsMine) return;
         Vector3 position;
         var rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
 
@@ -217,7 +219,7 @@ public class TankController : MonoBehaviour
 
         tankRb.AddForce(force, ForceMode.VelocityChange);
     }
-    
+
     public void Shot()
     {
         if (!_isShootingActive) return;

@@ -45,4 +45,9 @@ public class GameController : MonoBehaviour
     {
         tank = GameObject.FindObjectOfType<TankController>();
     }
+    void Update()
+    {
+        if (tank == null)
+            tank = GameObject.FindObjectOfType<TankController>();
+    }
 }

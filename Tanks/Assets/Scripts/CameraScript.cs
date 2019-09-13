@@ -1,21 +1,31 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public TankController tankController;
+    GameObject tank;
     Vector3 offset;
 
     // Update is called once per frame
     private void Start()
     {
-        SetUpCameraPosition(tankController.transform);
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var player in players)
+        {
+            if (player.GetPhotonView().IsMine)
+            {
+                tank = player;
+                break;
+            }
+        }
+        SetUpCameraPosition(tank.transform);
     }
 
     void LateUpdate()
     {
-        var tankControllerTransform = tankController.transform;
+        var tankControllerTransform = tank.transform;
 
         SetUpCameraPosition(tankControllerTransform);
 
