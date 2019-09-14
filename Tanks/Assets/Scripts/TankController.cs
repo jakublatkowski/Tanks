@@ -93,6 +93,7 @@ public class TankController : MonoBehaviour
         tankRb = GetComponent<Rigidbody>();
         baseCenterOfMass = tankRb.centerOfMass;
         tankRb.centerOfMass += centerOfMassOffset;
+        ui = GameObject.Find("Canvas").GetComponent<UIController>();
 
         ui.SetHealthBarValue(1);
         ui.SetSpecialBarValue(0);
