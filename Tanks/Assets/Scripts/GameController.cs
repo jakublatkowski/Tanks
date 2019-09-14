@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -49,5 +48,41 @@ public class GameController : MonoBehaviour
     {
         if (tank == null)
             tank = GameObject.FindObjectOfType<TankController>();
+    }
+
+    public IEnumerator RespawnTank(TankController caller, TankController attacker)
+    {
+        Debug.Log($"Caller: {caller.gameObject.transform.position}");
+        Debug.Log($"Attacker: {attacker.gameObject.transform.position}");
+
+        // Move tank far away from map
+        caller.SetPositionAndRotation(new Vector3(0f,0f, -1000f), Quaternion.identity);
+
+        // Set Camera to attacker wiew
+        var camera = FindObjectOfType<CameraScript>();
+        camera.WatchedTank = attacker.gameObject;
+        
+        // Disable Canvas
+        var canvas = GameObject.Find("Canvas");
+        canvas.SetActive(false);
+        
+        // TODO: Show sth
+
+        // Wait
+        yield return new WaitForSeconds(5);
+        
+        // RespawnTank
+        var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+        var index = Random.Range(0, spawnPoints.Length);
+
+        caller.SetPositionAndRotation(
+            spawnPoints[index].transform.position, 
+            spawnPoints[index].transform.rotation);
+
+        // Enabe Canvas back
+        canvas.SetActive(true);
+
+        // Set Camera back to caller view
+        camera.WatchedTank = caller.gameObject;
     }
 }

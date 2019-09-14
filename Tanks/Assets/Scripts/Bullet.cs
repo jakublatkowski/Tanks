@@ -1,15 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float hitPoints;
 
-    [SerializeField]
-    private TankController owner;
+    public TankController Owner { get; set; }
 
-    public float HitPoints { get { return hitPoints; } }
-    public TankController Owner { get { return owner; } set { owner = value; } }
+    void OnCollisionEnter(Collision collision)
+    {
+        var hitTank = collision.gameObject.GetComponent<TankController>();
+
+        if (hitTank != null && hitTank != Owner)
+        {
+            hitTank.AddDamage(hitPoints, Owner);
+            Destroy(this.gameObject);
+        }
+    }
 }

@@ -1,8 +1,6 @@
 ﻿using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using UnityEngine;
 
 
@@ -12,8 +10,6 @@ public class TankController : MonoBehaviour
     [Header("Required Components")]
     public Transform bulletGenerator;
     public Barrel barrel;
-    public UIController ui;
-
 
     [Header("Control Properties")]
     public float rotationSpeed = 1.0f;
@@ -53,6 +49,8 @@ public class TankController : MonoBehaviour
 
     private Rigidbody tankRb;
     private Vector3 baseCenterOfMass;
+    private UIController ui;
+
     #endregion
 
     #region Properties
@@ -88,12 +86,14 @@ public class TankController : MonoBehaviour
     #endregion
 
     #region UnityMethodsOverride
+
     void Start()
     {
+        ui = GameObject.Find("Canvas").GetComponent<UIController>();
+
         tankRb = GetComponent<Rigidbody>();
         baseCenterOfMass = tankRb.centerOfMass;
         tankRb.centerOfMass += centerOfMassOffset;
-        ui = GameObject.Find("Canvas").GetComponent<UIController>();
 
         ui.SetHealthBarValue(1);
         ui.SetSpecialBarValue(0);
@@ -227,7 +227,7 @@ public class TankController : MonoBehaviour
         }
     }
 
-    public void AddDamage(float value)
+    public void AddDamage(float value, TankController attacker)
     {
         healthPoints -= value;
 
@@ -235,8 +235,14 @@ public class TankController : MonoBehaviour
 
         if (healthPoints <= 0)
         {
-            //do sth
             Debug.Log("You Are Dead Man!");
+            StartCoroutine(GameController.instance.RespawnTank(this, attacker));
         }
+    }
+
+    public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
+    {
+        gameObject.transform.position = position;
+        gameObject.transform.rotation = rotation;
     }
 }
