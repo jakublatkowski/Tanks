@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - Special
   - Map
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
