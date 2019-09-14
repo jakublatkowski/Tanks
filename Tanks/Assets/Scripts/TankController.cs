@@ -14,8 +14,6 @@ public class TankController : MonoBehaviour
     public Barrel barrel;
     public UIController ui;
 
-    [Header("Prefabs")]
-    public GameObject bulletPrefab;
 
     [Header("Control Properties")]
     public float rotationSpeed = 1.0f;
@@ -152,24 +150,6 @@ public class TankController : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag.Equals("Bullet"))
-        {
-            Destroy(collision.collider);
-
-            var hitPoints = collision.gameObject.GetComponent<Bullet>().HitPoints;
-            healthPoints -= hitPoints;
-
-            ui.SetHealthBarValue(healthPoints / 100f);
-
-            if (healthPoints <= 0)
-            {
-                //do sth
-                Debug.Log("You Are Dead Man!");
-            }
-
-            Destroy(collision.gameObject);
-        }
-
         if (collision.gameObject.tag.Equals("Special"))
         {
             Destroy(collision.gameObject);
@@ -238,10 +218,24 @@ public class TankController : MonoBehaviour
             GameObject bullet = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
             Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
 
+            bullet.GetComponent<Bullet>().Owner = this;
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
             yield return new WaitForSeconds(.1f);
+        }
+    }
+
+    public void AddDamage(float value)
+    {
+        healthPoints -= value;
+
+        ui.SetHealthBarValue(healthPoints / 100f);
+
+        if (healthPoints <= 0)
+        {
+            //do sth
+            Debug.Log("You Are Dead Man!");
         }
     }
 }
