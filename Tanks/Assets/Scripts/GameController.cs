@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,11 +44,21 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tank = GameObject.FindObjectOfType<TankController>();
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var player in players)
+        {
+            if (player.GetPhotonView().IsMine)
+            {
+                tank = player.GetComponent<TankController>();
+                break;
+            }
+        }
     }
     void Update()
     {
         if (tank == null)
-            tank = GameObject.FindObjectOfType<TankController>();
+        {
+            Start();
+        }
     }
 }
