@@ -154,6 +154,12 @@ public class TankController : MonoBehaviour
             _isSpecialActive = true;
             timeSpecialActivated = Time.time;
         }
+
+        if (collision.gameObject.tag.Equals("Bullet"))
+        {
+            var bullet = collision.gameObject.GetComponent<Bullet>();
+            AddDamage(bullet.HitPoints, bullet.Owner);
+        }
     }
 
     public void OnCollisionStay(Collision collision)
@@ -199,14 +205,8 @@ public class TankController : MonoBehaviour
     {
         if (!gameObject.GetComponent<PhotonView>().IsMine) return;
 
-        if (IsBarrelRaising)
-        {
-            barrel.Raise();
-        }
-        else
-        {
-            barrel.LowerDown();
-        }
+        if (IsBarrelRaising) barrel.Raise();
+        else barrel.LowerDown();
     }
 
     public void Shot()
