@@ -109,14 +109,7 @@ public class TankController : MonoBehaviour
     {
         if (_isGravityActive) Moving();
 
-        if (IsBarrelRaising)
-        {
-            barrel.Raise();
-        }
-        else
-        {
-            barrel.LowerDownToNormal();
-        }
+        MoveBarrel();
 
         if(!_isShootingActive && _timeToActivateShooting <= Time.time)
         {
@@ -131,6 +124,7 @@ public class TankController : MonoBehaviour
             if (specialBarValue >= 1) _isSpecialActive = false;
         }
     }
+
     void FixedUpdate()
     {
         // Calculate better gravity, when we don't touch ground.
@@ -182,6 +176,7 @@ public class TankController : MonoBehaviour
     private void Moving()
     {
         if (!tankRb.GetComponent<PhotonView>().IsMine) return;
+
         Vector3 position;
         var rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
 
@@ -198,6 +193,20 @@ public class TankController : MonoBehaviour
         var force = position * accelerationForce * Time.deltaTime;
 
         tankRb.AddForce(force, ForceMode.VelocityChange);
+    }
+
+    private void MoveBarrel()
+    {
+        if (!gameObject.GetComponent<PhotonView>().IsMine) return;
+
+        if (IsBarrelRaising)
+        {
+            barrel.Raise();
+        }
+        else
+        {
+            barrel.LowerDown();
+        }
     }
 
     public void Shot()
@@ -217,7 +226,6 @@ public class TankController : MonoBehaviour
         {
             //tworzenie pocisku
             GameObject bullet = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
-            Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
 
             bullet.GetComponent<Bullet>().Owner = this;
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
@@ -229,7 +237,17 @@ public class TankController : MonoBehaviour
 
     public void AddDamage(float value, TankController attacker)
     {
+        Debug.Log($"Attacker: {attacker.gameObject.GetPhotonView().Owner.NickName}");
+        Debug.Log($"Damaged Tank: {gameObject.GetPhotonView().Owner.NickName}");
+
+        if (!gameObject.GetPhotonView().IsMine)
+        {
+            Debug.Log("Not damaged");
+            return;
+        }
+
         healthPoints -= value;
+        Debug.Log("Damaged");
 
         ui.SetHealthBarValue(healthPoints / 100f);
 
@@ -242,7 +260,23 @@ public class TankController : MonoBehaviour
 
     public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
     {
+        if (!gameObject.GetPhotonView().IsMine) return;
+        
         gameObject.transform.position = position;
         gameObject.transform.rotation = rotation;
+    }
+
+    public void ResetTank()
+    {
+        if (!gameObject.GetPhotonView().IsMine) return;
+
+        var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+        Debug.Log($"SpawnPoints: {spawnPoints.Length}");
+        var index = Random.Range(0, spawnPoints.Length);
+        Debug.Log($"Index: {index}");
+
+        SetPositionAndRotation(
+            spawnPoints[index].transform.position,
+            spawnPoints[index].transform.rotation);
     }
 }

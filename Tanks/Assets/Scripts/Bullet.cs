@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
@@ -10,11 +11,13 @@ public class Bullet : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         var hitTank = collision.gameObject.GetComponent<TankController>();
+        Debug.Log($"Collision: {collision.gameObject.GetPhotonView()?.Owner.NickName}  HP: {collision.gameObject.GetComponent<TankController>().healthPoints}");
+        Debug.Log($"Owner: {Owner.gameObject.GetPhotonView().Owner.NickName}  HP: {Owner.healthPoints}");
 
-        if (hitTank != null && hitTank != Owner)
-        {
-            hitTank.AddDamage(hitPoints, Owner);
-            Destroy(this.gameObject);
-        }
+        if (hitTank == Owner) return;
+
+        if (hitTank != null) hitTank.AddDamage(hitPoints, Owner);
+        
+        PhotonNetwork.Destroy(this.gameObject);
     }
 }

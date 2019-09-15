@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -50,13 +51,13 @@ public class GameController : MonoBehaviour
             tank = GameObject.FindObjectOfType<TankController>();
     }
 
-    public IEnumerator RespawnTank(TankController caller, TankController attacker)
+    public IEnumerator RespawnTank(TankController damagedTank, TankController attacker)
     {
-        Debug.Log($"Caller: {caller.gameObject.transform.position}");
-        Debug.Log($"Attacker: {attacker.gameObject.transform.position}");
+        Debug.Log($"DamagedTank: {damagedTank.gameObject.GetPhotonView().Owner.NickName}  HP: {damagedTank.healthPoints}");
+        Debug.Log($"Attacker: {attacker.gameObject.GetPhotonView().Owner.NickName}  HP: {damagedTank.healthPoints}");
 
         // Move tank far away from map
-        caller.SetPositionAndRotation(new Vector3(0f,0f, -1000f), Quaternion.identity);
+        //damagedTank.SetPositionAndRotation(new Vector3(0f,0f, -1000f), Quaternion.identity);
 
         // Set Camera to attacker wiew
         var camera = FindObjectOfType<CameraScript>();
@@ -72,17 +73,12 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(5);
         
         // RespawnTank
-        var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
-        var index = Random.Range(0, spawnPoints.Length);
-
-        caller.SetPositionAndRotation(
-            spawnPoints[index].transform.position, 
-            spawnPoints[index].transform.rotation);
+        damagedTank.ResetTank();
 
         // Enabe Canvas back
         canvas.SetActive(true);
 
-        // Set Camera back to caller view
-        camera.WatchedTank = caller.gameObject;
+        // Set Camera back to damagedTank view
+        camera.WatchedTank = damagedTank.gameObject;
     }
 }

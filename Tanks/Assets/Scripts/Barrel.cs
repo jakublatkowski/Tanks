@@ -30,7 +30,7 @@ public class Barrel : MonoBehaviour
         }
     }
 
-    public void LowerDownToNormal()
+    public void LowerDown()
     {
         currentRaisingSpeed = raisingSpeed;
         currentLoweringSpeed += 0.02f * currentLoweringSpeed;
