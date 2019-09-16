@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.IO;
 using UnityEngine;
@@ -158,7 +159,8 @@ public class TankController : MonoBehaviour
         if (collision.gameObject.tag.Equals("Bullet"))
         {
             var bullet = collision.gameObject.GetComponent<Bullet>();
-            AddDamage(bullet.HitPoints, bullet.Owner);
+            var attacker = collision.gameObject.GetComponent<PhotonView>().Owner;
+            AddDamage(bullet.HitPoints, attacker);
         }
     }
 
@@ -235,9 +237,9 @@ public class TankController : MonoBehaviour
         }
     }
 
-    public void AddDamage(float value, TankController attacker)
+    public void AddDamage(float value, Player attacker)
     {
-        Debug.Log($"Attacker: {attacker.gameObject.GetPhotonView().Owner.NickName}");
+        Debug.Log($"Attacker: {attacker.NickName}");
         Debug.Log($"Damaged Tank: {gameObject.GetPhotonView().Owner.NickName}");
 
         if (!gameObject.GetPhotonView().IsMine)
@@ -269,6 +271,8 @@ public class TankController : MonoBehaviour
     public void ResetTank()
     {
         if (!gameObject.GetPhotonView().IsMine) return;
+
+        gameObject.GetComponent<TankController>().healthPoints = 100;
 
         var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
         Debug.Log($"SpawnPoints: {spawnPoints.Length}");
