@@ -155,7 +155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitPoints: 10
-  owner: {fileID: 0}
 --- !u!114 &2804694070438585652
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,7 +8,11 @@ public class ExplostionScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        new WaitForSeconds(2);
+        StartCoroutine(WaitAndDestroy(2));
+    }
+    private IEnumerator WaitAndDestroy(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
         PhotonNetwork.Destroy(this.gameObject);
     }
 }

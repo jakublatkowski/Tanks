@@ -9,35 +9,34 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private float hitPoints;
 
-    [SerializeField]
-    private TankController owner;
-
     public float HitPoints { get { return hitPoints; } }
-    public TankController Owner { get { return owner; } set { owner = value; } }
-
-    public void Start()
+    
+    private void OnCollisionEnter(Collision collision)
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log("Collison");
+        //Find player that shooted bullet
+        var players = GameObject.FindGameObjectsWithTag("Player");
+        TankController owner = null;
         foreach (var player in players)
         {
-            if (player.GetPhotonView().IsMine)
+            if (player.GetPhotonView().Owner == this.GetComponentInParent<PhotonView>().Owner)
             {
+                //if collison happened with another player then add damage
+                if (collision.gameObject.tag.Equals("Player"))
+                    collision.gameObject.GetPhotonView().RPC("AddDamage", RpcTarget.All, hitPoints, player.GetPhotonView().Owner);
+
+                //destroy bullet
                 owner = player.GetComponent<TankController>();
                 break;
             }
         }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
+        Debug.Log("make explotion");
         if (collision.gameObject.tag.Equals("Player"))
-        {
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "SmallExplosion"), this.transform.position, this.transform.rotation);
-        }
         else
-        {
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "TinyExplosion"), this.transform.position, this.transform.rotation);
-        }
-        PhotonNetwork.Destroy(this.gameObject); 
+
+        Debug.Log("destroy bullet");
+        owner.DestroyMyBullet(this.gameObject);
     }
 }

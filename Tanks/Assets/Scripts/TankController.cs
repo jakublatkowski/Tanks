@@ -243,4 +243,8 @@ public class TankController : MonoBehaviour
             yield return new WaitForSeconds(.1f);
         }
     }
+    public void DestroyMyBullet(GameObject bullet)
+    {
+        PhotonNetwork.Destroy(bullet);
+    }
 }
