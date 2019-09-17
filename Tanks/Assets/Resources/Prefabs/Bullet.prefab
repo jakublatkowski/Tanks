@@ -155,6 +155,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitPoints: 10
+  explosionSoundEffect: {fileID: 8300000, guid: 8524588a69a4f3e40bb597b6221138f1,
+    type: 3}
 --- !u!114 &2804694070438585652
 MonoBehaviour:
   m_ObjectHideFlags: 0

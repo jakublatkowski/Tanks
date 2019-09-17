@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float hitPoints;
+    [SerializeField]
+    public AudioClip explosionSoundEffect;
 
     public float HitPoints { get { return hitPoints; } }
     
@@ -35,6 +37,7 @@ public class Bullet : MonoBehaviour
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "SmallExplosion"), this.transform.position, this.transform.rotation);
         else
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "TinyExplosion"), this.transform.position, this.transform.rotation);
+        AudioSource.PlayClipAtPoint(explosionSoundEffect, this.transform.position);
 
         Debug.Log("destroy bullet");
         owner.DestroyMyBullet(this.gameObject);
