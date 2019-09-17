@@ -8,10 +8,17 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float hitPoints;
+    private Rigidbody m_Rigidbody;
     [SerializeField]
     private AudioClip explosionSoundEffect;
 
     public float HitPoints { get { return hitPoints; } }
+
+    private void Start()
+    {
+        m_Rigidbody = GetComponent<Rigidbody>();
+        m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+    }
     
     private void OnCollisionEnter(Collision collision)
     {
@@ -31,7 +38,7 @@ public class Bullet : MonoBehaviour
                 break;
             }
         }
-        Debug.Log("make explotion");
+        Debug.Log("make explosion");
         if (collision.gameObject.tag.Equals("Player"))
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "SmallExplosion"), this.transform.position, this.transform.rotation);
         else
