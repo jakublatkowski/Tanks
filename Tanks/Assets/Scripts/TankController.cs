@@ -156,12 +156,12 @@ public class TankController : MonoBehaviour
             timeSpecialActivated = Time.time;
         }
 
-        if (collision.gameObject.tag.Equals("Bullet"))
-        {
-            var bullet = collision.gameObject.GetComponent<Bullet>();
-            var attacker = collision.gameObject.GetComponent<PhotonView>().Owner;
-            AddDamage(bullet.HitPoints, attacker);
-        }
+        //if (collision.gameObject.tag.Equals("Bullet"))
+        //{
+        //    var bullet = collision.gameObject.GetComponent<Bullet>();
+        //    var attacker = collision.gameObject.GetPhotonView().Owner;
+        //    AddDamage(bullet.HitPoints, attacker);
+        //}
     }
 
     public void OnCollisionStay(Collision collision)
@@ -228,8 +228,7 @@ public class TankController : MonoBehaviour
         {
             //tworzenie pocisku
             GameObject bullet = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
-
-            bullet.GetComponent<Bullet>().Owner = this;
+            
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
@@ -237,6 +236,7 @@ public class TankController : MonoBehaviour
         }
     }
 
+    [PunRPC]
     public void AddDamage(float value, Player attacker)
     {
         Debug.Log($"Attacker: {attacker.NickName}");
@@ -273,6 +273,7 @@ public class TankController : MonoBehaviour
         if (!gameObject.GetPhotonView().IsMine) return;
 
         gameObject.GetComponent<TankController>().healthPoints = 100;
+        ui.SetHealthBarValue(healthPoints / 100f);
 
         var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
         Debug.Log($"SpawnPoints: {spawnPoints.Length}");
@@ -282,5 +283,9 @@ public class TankController : MonoBehaviour
         SetPositionAndRotation(
             spawnPoints[index].transform.position,
             spawnPoints[index].transform.rotation);
+    }
+    public void DestroyMyBullet(GameObject bullet)
+    {
+        PhotonNetwork.Destroy(bullet);
     }
 }
