@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.IO;
 using UnityEngine;
@@ -151,24 +152,6 @@ public class TankController : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag.Equals("Bullet"))
-        {
-            Destroy(collision.collider);
-
-            var hitPoints = collision.gameObject.GetComponent<Bullet>().HitPoints;
-            healthPoints -= hitPoints;
-
-            ui.SetHealthBarValue(healthPoints / 100f);
-
-            if (healthPoints <= 0)
-            {
-                //do sth
-                Debug.Log("You Are Dead Man!");
-            }
-
-            Destroy(collision.gameObject);
-        }
-
         if (collision.gameObject.tag.Equals("Special"))
         {
             Destroy(collision.gameObject);
@@ -178,6 +161,13 @@ public class TankController : MonoBehaviour
             _isSpecialActive = true;
             timeSpecialActivated = Time.time;
         }
+
+        //if (collision.gameObject.tag.Equals("Bullet"))
+        //{
+        //    var bullet = collision.gameObject.GetComponent<Bullet>();
+        //    var attacker = collision.gameObject.GetPhotonView().Owner;
+        //    AddDamage(bullet.HitPoints, attacker);
+        //}
     }
 
     public void OnCollisionStay(Collision collision)
@@ -242,6 +232,54 @@ public class TankController : MonoBehaviour
 
             yield return new WaitForSeconds(.1f);
         }
+    }
+    [PunRPC]
+    public void AddDamage(float value, Player attacker)
+    {
+        Debug.Log($"Attacker: {attacker.NickName}");
+        Debug.Log($"Damaged Tank: {gameObject.GetPhotonView().Owner.NickName}");
+
+        if (!gameObject.GetPhotonView().IsMine)
+        {
+            Debug.Log("Not damaged");
+            return;
+        }
+
+        healthPoints -= value;
+        Debug.Log("Damaged");
+
+        ui.SetHealthBarValue(healthPoints / 100f);
+
+        if (healthPoints <= 0)
+        {
+            Debug.Log("You Are Dead Man!");
+            StartCoroutine(GameController.instance.RespawnTank(this, attacker));
+        }
+    }
+
+    public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
+    {
+        if (!gameObject.GetPhotonView().IsMine) return;
+
+        gameObject.transform.position = position;
+        gameObject.transform.rotation = rotation;
+    }
+
+    public void ResetTank()
+    {
+        if (!gameObject.GetPhotonView().IsMine) return;
+
+        gameObject.GetComponent<TankController>().healthPoints = 100;
+        ui.SetHealthBarValue(healthPoints / 100f);
+
+        var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+        Debug.Log($"SpawnPoints: {spawnPoints.Length}");
+        var index = Random.Range(0, spawnPoints.Length);
+        Debug.Log($"Index: {index}");
+
+        SetPositionAndRotation(
+            spawnPoints[index].transform.position,
+            spawnPoints[index].transform.rotation);
     }
     public void DestroyMyBullet(GameObject bullet)
     {

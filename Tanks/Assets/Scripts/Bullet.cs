@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private float hitPoints;
     [SerializeField]
-    public AudioClip explosionSoundEffect;
+    private AudioClip explosionSoundEffect;
 
     public float HitPoints { get { return hitPoints; } }
     
@@ -27,7 +27,6 @@ public class Bullet : MonoBehaviour
                 if (collision.gameObject.tag.Equals("Player"))
                     collision.gameObject.GetPhotonView().RPC("AddDamage", RpcTarget.All, hitPoints, player.GetPhotonView().Owner);
 
-                //destroy bullet
                 owner = player.GetComponent<TankController>();
                 break;
             }
@@ -37,9 +36,18 @@ public class Bullet : MonoBehaviour
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "SmallExplosion"), this.transform.position, this.transform.rotation);
         else
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "TinyExplosion"), this.transform.position, this.transform.rotation);
-        AudioSource.PlayClipAtPoint(explosionSoundEffect, this.transform.position);
 
+        //Play Sound effect
+        this.gameObject.GetPhotonView().RPC("PlaySound", RpcTarget.All);
+
+        //destroy bullet
         Debug.Log("destroy bullet");
         owner.DestroyMyBullet(this.gameObject);
+    }
+
+    [PunRPC]
+    private void PlaySound()
+    {
+        AudioSource.PlayClipAtPoint(explosionSoundEffect, this.transform.position);
     }
 }
