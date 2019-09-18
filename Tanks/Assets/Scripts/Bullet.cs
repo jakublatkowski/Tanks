@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -10,20 +11,21 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //Find player that shooted bullet
-        var players = GameObject.FindGameObjectsWithTag("Player");
-        foreach (var player in players)
+        //if collison happened with another player then add damage
+        if (collision.gameObject.tag.Equals("Player"))
         {
-            if (player.GetPhotonView().Owner == this.GetComponentInParent<PhotonView>().Owner)
-            {
-                //if collison happened with another player then add damage
-                if (collision.gameObject.tag.Equals("Player"))
-                    collision.gameObject.GetPhotonView().RPC("AddDamage", RpcTarget.All, hitPoints, player.GetPhotonView().Owner);
+            var bulletsOwner = this.GetComponentInParent<PhotonView>().Owner;
 
-                //destroy bullet
-                player.GetComponent<TankController>().DestroyMyBullet(this.gameObject);
-                break;
-            }
+            //Find player that shot bullet
+            var players = GameObject.FindGameObjectsWithTag("Player");
+            var attackingPlayer = players.Single(player => player.GetPhotonView().Owner == bulletsOwner)
+                .GetPhotonView().Owner;
+
+            collision.gameObject.GetPhotonView()
+                .RPC(nameof(TankController.AddDamage), RpcTarget.All, hitPoints, attackingPlayer);
         }
+
+        //destroy bullet
+        PhotonNetwork.Destroy(this.gameObject);
     }
 }

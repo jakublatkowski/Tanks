@@ -2,6 +2,7 @@
 using Photon.Realtime;
 using System.Collections;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -155,13 +156,6 @@ public class TankController : MonoBehaviour
             _isSpecialActive = true;
             timeSpecialActivated = Time.time;
         }
-
-        //if (collision.gameObject.tag.Equals("Bullet"))
-        //{
-        //    var bullet = collision.gameObject.GetComponent<Bullet>();
-        //    var attacker = collision.gameObject.GetPhotonView().Owner;
-        //    AddDamage(bullet.HitPoints, attacker);
-        //}
     }
 
     public void OnCollisionStay(Collision collision)
@@ -239,53 +233,37 @@ public class TankController : MonoBehaviour
     [PunRPC]
     public void AddDamage(float value, Player attacker)
     {
-        Debug.Log($"Attacker: {attacker.NickName}");
-        Debug.Log($"Damaged Tank: {gameObject.GetPhotonView().Owner.NickName}");
-
         if (!gameObject.GetPhotonView().IsMine)
         {
-            Debug.Log("Not damaged");
             return;
         }
 
         healthPoints -= value;
-        Debug.Log("Damaged");
 
         ui.SetHealthBarValue(healthPoints / 100f);
 
         if (healthPoints <= 0)
         {
-            Debug.Log("You Are Dead Man!");
             StartCoroutine(GameController.instance.RespawnTank(this, attacker));
         }
     }
 
-    public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
+    public void ResetTank(float waitingTime)
     {
-        if (!gameObject.GetPhotonView().IsMine) return;
-        
-        gameObject.transform.position = position;
-        gameObject.transform.rotation = rotation;
-    }
+        if (gameObject.GetPhotonView().IsMine)
+        {
+            healthPoints = 100f;
+            _isSpecialActive = false;
+            timeSpecialActivated = Time.time;
 
-    public void ResetTank()
-    {
-        if (!gameObject.GetPhotonView().IsMine) return;
+            ui.SetHealthBarValue(1);
+            ui.SetSpecialBarValue(0);
 
-        gameObject.GetComponent<TankController>().healthPoints = 100;
-        ui.SetHealthBarValue(healthPoints / 100f);
+            var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+            var index = Random.Range(0, spawnPoints.Length);
 
-        var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
-        Debug.Log($"SpawnPoints: {spawnPoints.Length}");
-        var index = Random.Range(0, spawnPoints.Length);
-        Debug.Log($"Index: {index}");
-
-        SetPositionAndRotation(
-            spawnPoints[index].transform.position,
-            spawnPoints[index].transform.rotation);
-    }
-    public void DestroyMyBullet(GameObject bullet)
-    {
-        PhotonNetwork.Destroy(bullet);
+            gameObject.transform.position = spawnPoints[index].transform.position;
+            gameObject.transform.rotation = spawnPoints[index].transform.rotation;
+        }
     }
 }
