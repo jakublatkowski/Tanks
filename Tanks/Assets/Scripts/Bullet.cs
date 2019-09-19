@@ -9,7 +9,6 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float hitPoints;
-    public float HitPoints => hitPoints;
     
     private Rigidbody m_Rigidbody;
     [SerializeField]
@@ -25,11 +24,10 @@ public class Bullet : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        var attackingPlayer = null;
         var players = GameObject.FindGameObjectsWithTag("Player");
         var bulletsOwner = this.GetComponentInParent<PhotonView>().Owner;
         //Find player that shot bullet
-        attackingPlayer = players.Single(player => player.GetPhotonView().Owner == bulletsOwner);
+        var attackingPlayer = players.Single(player => player.GetPhotonView().Owner == bulletsOwner);
         
         //if collison happened with another player then add damage
         if (collision.gameObject.tag.Equals("Player"))

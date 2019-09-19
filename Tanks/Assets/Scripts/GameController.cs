@@ -65,60 +65,18 @@ public class GameController : MonoBehaviour
     public IEnumerator RespawnTank(TankController damagedTank, Player attacker)
     {
         //Get Attacker's tank
-        TankController attackersTank = null;
         var players = GameObject.FindGameObjectsWithTag("Player");
-        foreach (var player in players)
-        {
-            if (player.GetPhotonView().Owner == attacker)
-            {
-                attackersTank = player.GetComponent<TankController>();
-            }
-        }
-
-        Debug.Log($"DamagedTank: {damagedTank.gameObject.GetPhotonView().Owner.NickName}  HP: {damagedTank.healthPoints}");
-        Debug.Log($"Attacker: {attackersTank.gameObject.GetPhotonView().Owner.NickName}  HP: {attackersTank.healthPoints}");
-
-        // Move tank far away from map
-        //damagedTank.SetPositionAndRotation(new Vector3(0f,0f, -1000f), Quaternion.identity);
-
-        // Set Camera to attacker wiew
-        var camera = FindObjectOfType<CameraScript>();
-        camera.WatchedTank = attackersTank.gameObject;
-
-        // Disable Canvas
-        var canvas = GameObject.Find("Canvas");
-        canvas.SetActive(false);
-
-        // TODO: Show sth
-
-        // Wait
-        yield return new WaitForSeconds(5);
-
-        // RespawnTank
-        damagedTank.ResetTank();
-
-        // Enabe Canvas back
-        canvas.SetActive(true);
-
-        // Set Camera back to damagedTank view
-        camera.WatchedTank = damagedTank.gameObject;
-    }
-
-    public IEnumerator RespawnTank(TankController damagedTank, Player attacker)
-    {
-        //Get Attacker's tank
-        var players = GameObject.FindGameObjectsWithTag("Player");
-        var attackersTank = players.Single(player => player.GetPhotonView().Owner == attacker)
+        TankController attackersTank = players.Single(player => player.GetPhotonView().Owner == attacker)
             .GetComponent<TankController>();
         
         // Set Camera to attacker wiew
         var camera = FindObjectOfType<CameraScript>();
         camera.WatchedTank = attackersTank.gameObject;
-        
+
         // Disable Canvas
         var canvas = GameObject.Find("Canvas");
         canvas.SetActive(false);
-        
+
         // TODO: Show sth
 
         // TODO: Change damaged tank texture
@@ -126,7 +84,7 @@ public class GameController : MonoBehaviour
         // Wait for enable UI
         yield return new WaitForSeconds(5);
 
-        // Reset damaged tank
+        // RespawnTank
         damagedTank.ResetTank(5f);
 
         // Enabe Canvas back
