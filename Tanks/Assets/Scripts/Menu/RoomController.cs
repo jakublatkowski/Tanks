@@ -21,6 +21,9 @@ public class RoomController : MonoBehaviourPunCallbacks
     private GameObject playerListingPrefab;
 
     [SerializeField]
+    private GameObject gameMode;
+
+    [SerializeField]
     private Text roomName;
 
     void ClearPlayerListings()
@@ -54,6 +57,19 @@ public class RoomController : MonoBehaviourPunCallbacks
         }
         ClearPlayerListings();
         ListPlayers();
+    }
+    public void OnGameModeChanged()
+    {
+        // główny gracz zmienił tryb rozgrywki
+        if (gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text == "Deathmatch")
+        { // jeżeli wybrał deatchmatch
+            Debug.Log("LOL");
+        }
+        else if (gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text == "TeamDeathmatch")
+        { // jeżeli wybrał team deathmatch
+            Debug.Log("team LOL");
+
+        }
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {

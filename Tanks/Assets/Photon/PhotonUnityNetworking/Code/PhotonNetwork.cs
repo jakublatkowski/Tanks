@@ -1752,7 +1752,7 @@ namespace Photon.Pun
                 Debug.LogError("JoinRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") + ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
                 return false;
             }
-            if (string.IsNullOrEmpty(roomName))
+            if (roomName == null)
             {
                 Debug.LogError("JoinRoom failed. A roomname is required. If you don't know one, how will you join?");
                 return false;

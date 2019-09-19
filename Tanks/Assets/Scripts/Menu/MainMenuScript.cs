@@ -12,27 +12,24 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject roomCreateButton;
     [SerializeField]
+    private GameObject roomJoinButton;
+    [SerializeField]
     private GameObject lobbyPanel;
     [SerializeField]
     private GameObject mainPanel;
     [SerializeField]
     private InputField playerName;
+    [SerializeField]
+    private InputField gamePIN;
+    [SerializeField]
+    private GameObject errorText;
 
-    private string roomName;
-    private int roomSize;
-
-    [SerializeField]
-    private List<RoomInfo> roomListings;
-    [SerializeField]
-    private Transform roomContainer;
-    [SerializeField]
-    private GameObject roomListingPrefab;
+    private string PIN = "";
 
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
         lobbyConnectButton.SetActive(true);
-        roomListings = new List<RoomInfo>();
         
         if (PlayerPrefs.HasKey("NickName"))
         {
@@ -61,61 +58,31 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
         mainPanel.SetActive(false);
         lobbyPanel.SetActive(true);
         PhotonNetwork.JoinLobby();
-    } 
-    public override void OnJoinedLobby()
-    {
-        roomCreateButton.SetActive(true);
     }
-
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    public void OnPINChanged()
     {
-        foreach (var item in roomListings)
-        {
-            roomListings.Remove(item);
-        }
-        for (int i = 0; i < roomContainer.childCount; i++)
-        {
-            Destroy(roomContainer.GetChild(i).gameObject);
-        }
-
-        foreach(RoomInfo room in roomList)
-        {
-            if (room.PlayerCount > 0)
-            {
-                roomListings.Add(room);
-                ListRoom(room);
-            }
-        }
+        PIN = gamePIN.text;
     }
-
-    static System.Predicate<RoomInfo> ByName(string name)
+    public void JoinRoom()
     {
-        return delegate (RoomInfo room)
-        {
-            return room.Name == name;
-        };
+        PhotonNetwork.JoinRoom(PIN);
     }
-    void ListRoom(RoomInfo room)
+    public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        GameObject tmpListing = Instantiate(roomListingPrefab, roomContainer);
-        RoomButton tmpButton = tmpListing.GetComponent<RoomButton>();
-        tmpButton.SetRoom(room.Name, room.MaxPlayers, room.PlayerCount);
+        StartCoroutine("FlashError");
+        Debug.Log(message);
     }
-
-    public void OnRoomNameChanged(string nameIn)
+    private System.Collections.IEnumerator FlashError()
     {
-        roomName = nameIn;
-    }
-    public void OnRoomSizeChanged(string sizeIn)
-    {
-        roomSize = int.Parse(sizeIn);
+        Debug.Log("Hello therE");
+        errorText.SetActive(true);
+        yield return new WaitForSeconds(5);
+        errorText.SetActive(false);
     }
     public void CreateRoom()
     {
-        if (roomSize == 0)
-            roomSize = 2;
-        if (roomName == null)
-            roomName = PhotonNetwork.NickName + "'s Room";
+        int roomSize = 20;
+        string roomName = Random.Range(0, 99999).ToString();
         RoomOptions roomOpt = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize };
         PhotonNetwork.CreateRoom(roomName, roomOpt);
     }
