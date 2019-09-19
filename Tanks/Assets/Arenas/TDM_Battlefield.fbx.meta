@@ -1,14 +1,24 @@
 fileFormatVersion: 2
-guid: 6e789763b925e1c42a4f343f2dc96fda
+guid: 11cd491ff1229184ab7000c15416c18a
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: Mud
-    2100002: Grass
-    2100004: HighGround
-    2100006: Cliff
+    2100000: lightBlue
+    2100002: tintBlue
+    2100004: powerUp
+    2100006: wallBlue
+    2100008: mediumBlue
+    2100010: extremeBlue
+    2100012: hardBlue
+    2100014: wallRed
+    2100016: lightRed
+    2100018: tintRed
+    2100020: mediumRed
+    2100022: extremeRed
+    2100024: hardRed
+    2100026: Material
     2300000: //RootNode
     3300000: //RootNode
     4300000: Map
