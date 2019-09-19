@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Shootable
+  - Text
+  - Bullet
+  - Special
+  - Map
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

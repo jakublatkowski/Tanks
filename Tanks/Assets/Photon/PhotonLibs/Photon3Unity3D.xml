@@ -1711,7 +1711,7 @@
         <member name="M:ExitGames.Client.Photon.Protocol.Serialize(System.Int16,System.Byte[],System.Int32@)">
             <summary>
             Serializes a short typed value into a byte-array (target) starting at the also given targetOffset.
-            The altered offset is known to the caller, because it is given via a referenced parameter.
+            The altered offset is known to the damagedTank, because it is given via a referenced parameter.
             </summary>
             <param name="value">The short value to be serialized</param>
             <param name="target">The byte-array to serialize the short to</param>
@@ -1720,7 +1720,7 @@
         <member name="M:ExitGames.Client.Photon.Protocol.Serialize(System.Int32,System.Byte[],System.Int32@)">
             <summary>
             Serializes an int typed value into a byte-array (target) starting at the also given targetOffset.
-            The altered offset is known to the caller, because it is given via a referenced parameter.
+            The altered offset is known to the damagedTank, because it is given via a referenced parameter.
             </summary>
             <param name="value">The int value to be serialized</param>
             <param name="target">The byte-array to serialize the short to</param>
@@ -1729,7 +1729,7 @@
         <member name="M:ExitGames.Client.Photon.Protocol.Serialize(System.Single,System.Byte[],System.Int32@)">
             <summary>
             Serializes an float typed value into a byte-array (target) starting at the also given targetOffset.
-            The altered offset is known to the caller, because it is given via a referenced parameter.
+            The altered offset is known to the damagedTank, because it is given via a referenced parameter.
             </summary>
             <param name="value">The float value to be serialized</param>
             <param name="target">The byte-array to serialize the short to</param>
@@ -1739,7 +1739,7 @@
             <summary>
             Deserialize fills the given int typed value with the given byte-array (source) starting at the also given offset.
             The result is placed in a variable (value). There is no need to return a value because the parameter value is given by reference.
-            The altered offset is this way also known to the caller.
+            The altered offset is this way also known to the damagedTank.
             </summary>
             <param name="value">The int value to deserialize into</param>
             <param name="source">The byte-array to deserialize from</param>
@@ -1749,7 +1749,7 @@
             <summary>
             Deserialize fills the given short typed value with the given byte-array (source) starting at the also given offset.
             The result is placed in a variable (value). There is no need to return a value because the parameter value is given by reference.
-            The altered offset is this way also known to the caller.
+            The altered offset is this way also known to the damagedTank.
             </summary>
             <param name="value">The short value to deserialized into</param>
             <param name="source">The byte-array to deserialize from</param>
@@ -1759,7 +1759,7 @@
             <summary>
             Deserialize fills the given float typed value with the given byte-array (source) starting at the also given offset.
             The result is placed in a variable (value). There is no need to return a value because the parameter value is given by reference.
-            The altered offset is this way also known to the caller.
+            The altered offset is this way also known to the damagedTank.
             </summary>
             <param name="value">The float value to deserialize</param>
             <param name="source">The byte-array to deserialize from</param>

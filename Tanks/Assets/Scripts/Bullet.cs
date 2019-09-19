@@ -1,13 +1,16 @@
-﻿using Photon.Pun;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float hitPoints;
+    public float HitPoints => hitPoints;
+    
     private Rigidbody m_Rigidbody;
     [SerializeField]
     private AudioClip explosionSoundEffect;
@@ -22,23 +25,19 @@ public class Bullet : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collison");
-        //Find player that shooted bullet
+        var attackingPlayer = null;
         var players = GameObject.FindGameObjectsWithTag("Player");
-        TankController owner = null;
-        foreach (var player in players)
+        var bulletsOwner = this.GetComponentInParent<PhotonView>().Owner;
+        //Find player that shot bullet
+        attackingPlayer = players.Single(player => player.GetPhotonView().Owner == bulletsOwner);
+        
+        //if collison happened with another player then add damage
+        if (collision.gameObject.tag.Equals("Player"))
         {
-            if (player.GetPhotonView().Owner == this.GetComponentInParent<PhotonView>().Owner)
-            {
-                //if collison happened with another player then add damage
-                if (collision.gameObject.tag.Equals("Player"))
-                    collision.gameObject.GetPhotonView().RPC("AddDamage", RpcTarget.All, hitPoints, player.GetPhotonView().Owner);
-
-                owner = player.GetComponent<TankController>();
-                break;
-            }
+            collision.gameObject.GetPhotonView().RPC(nameof(TankController.AddDamage), RpcTarget.All, hitPoints, attackingPlayer.GetPhotonView().Owner);
         }
-        Debug.Log("make explosion");
+        
+        //Make Explosion
         if (collision.gameObject.tag.Equals("Player"))
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "SmallExplosion"), this.transform.position, this.transform.rotation);
         else
@@ -47,11 +46,10 @@ public class Bullet : MonoBehaviour
         //Play Sound effect
         this.gameObject.GetPhotonView().RPC("PlaySound", RpcTarget.All);
 
-        //destroy bullet
-        Debug.Log("destroy bullet");
-        owner.DestroyMyBullet(this.gameObject);
+        //Destroy bullet
+        attackingPlayer.GetComponent<TankController>().DestroyMyBullet(this.gameObject);
     }
-
+    
     [PunRPC]
     private void PlaySound()
     {

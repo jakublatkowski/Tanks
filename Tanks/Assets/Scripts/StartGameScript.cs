@@ -16,6 +16,10 @@ public class StartGameScript : MonoBehaviour
     // Update is called once per frame
     private void CreatePlayer()
     {
-        tank = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Tank"), Vector3.zero, Quaternion.identity);
+        var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+        var index = Random.Range(0, spawnPoints.Length);
+        var spawnPoint = spawnPoints[index];
+
+        tank = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Tank"), spawnPoint.transform.position, spawnPoint.transform.rotation);
     }
 }
