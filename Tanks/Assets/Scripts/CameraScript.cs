@@ -5,27 +5,30 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    GameObject tank;
     Vector3 offset;
+
+    public GameObject WatchedTank { get; set; }
 
     // Update is called once per frame
     private void Start()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
         foreach (var player in players)
         {
             if (player.GetPhotonView().IsMine)
             {
-                tank = player;
+                WatchedTank = player;
                 break;
             }
         }
-        SetUpCameraPosition(tank.transform);
+
+        SetUpCameraPosition(WatchedTank.transform);
     }
 
     void LateUpdate()
     {
-        var tankControllerTransform = tank.transform;
+        var tankControllerTransform = WatchedTank.transform;
 
         SetUpCameraPosition(tankControllerTransform);
 
@@ -46,7 +49,7 @@ public class CameraScript : MonoBehaviour
 
     private void SetUpCameraPosition(Transform tankTransform)
     {
-        TankController tankController = tank.GetComponent<TankController>();
+        TankController tankController = WatchedTank.GetComponent<TankController>();
         transform.position = new Vector3
         {
             x = tankTransform.position.x,
