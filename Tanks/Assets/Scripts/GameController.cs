@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -44,12 +45,63 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tank = GameObject.FindObjectOfType<TankController>();
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var player in players)
+        {
+            if (player.GetPhotonView().IsMine)
+            {
+                tank = player.GetComponent<TankController>();
+                break;
+            }
+        }
     }
     void Update()
     {
         if (tank == null)
-            tank = GameObject.FindObjectOfType<TankController>();
+        {
+            Start();
+        }
+    }
+    public IEnumerator RespawnTank(TankController damagedTank, Player attacker)
+    {
+        //Get Attacker's tank
+        TankController attackersTank = null;
+        var players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var player in players)
+        {
+            if (player.GetPhotonView().Owner == attacker)
+            {
+                attackersTank = player.GetComponent<TankController>();
+            }
+        }
+
+        Debug.Log($"DamagedTank: {damagedTank.gameObject.GetPhotonView().Owner.NickName}  HP: {damagedTank.healthPoints}");
+        Debug.Log($"Attacker: {attackersTank.gameObject.GetPhotonView().Owner.NickName}  HP: {attackersTank.healthPoints}");
+
+        // Move tank far away from map
+        //damagedTank.SetPositionAndRotation(new Vector3(0f,0f, -1000f), Quaternion.identity);
+
+        // Set Camera to attacker wiew
+        var camera = FindObjectOfType<CameraScript>();
+        camera.WatchedTank = attackersTank.gameObject;
+
+        // Disable Canvas
+        var canvas = GameObject.Find("Canvas");
+        canvas.SetActive(false);
+
+        // TODO: Show sth
+
+        // Wait
+        yield return new WaitForSeconds(5);
+
+        // RespawnTank
+        damagedTank.ResetTank();
+
+        // Enabe Canvas back
+        canvas.SetActive(true);
+
+        // Set Camera back to damagedTank view
+        camera.WatchedTank = damagedTank.gameObject;
     }
 
     public IEnumerator RespawnTank(TankController damagedTank, Player attacker)

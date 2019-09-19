@@ -156,6 +156,13 @@ public class TankController : MonoBehaviour
             _isSpecialActive = true;
             timeSpecialActivated = Time.time;
         }
+
+        //if (collision.gameObject.tag.Equals("Bullet"))
+        //{
+        //    var bullet = collision.gameObject.GetComponent<Bullet>();
+        //    var attacker = collision.gameObject.GetPhotonView().Owner;
+        //    AddDamage(bullet.HitPoints, attacker);
+        //}
     }
 
     public void OnCollisionStay(Collision collision)
@@ -222,7 +229,6 @@ public class TankController : MonoBehaviour
         {
             //tworzenie pocisku
             GameObject bullet = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
-            
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
@@ -239,7 +245,6 @@ public class TankController : MonoBehaviour
         }
 
         healthPoints -= value;
-
         ui.SetHealthBarValue(healthPoints / 100f);
 
         if (healthPoints <= 0)
@@ -247,7 +252,10 @@ public class TankController : MonoBehaviour
             StartCoroutine(GameController.instance.RespawnTank(this, attacker));
         }
     }
-
+    public void DestroyMyBullet(GameObject bullet)
+    {
+        PhotonNetwork.Destroy(bullet);
+    }
     public void ResetTank(float waitingTime)
     {
         if (gameObject.GetPhotonView().IsMine)
