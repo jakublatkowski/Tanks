@@ -9,5 +9,7 @@ public class ConnectScript : MonoBehaviour
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.Disconnect();
+        PhotonNetwork.ConnectToRegion("EU");
     }
 }
