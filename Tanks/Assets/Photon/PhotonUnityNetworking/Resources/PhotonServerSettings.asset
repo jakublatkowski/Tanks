@@ -32,5 +32,7 @@ MonoBehaviour:
   - AddToList
   - RemoveFromList
   - GetListFromRoom
+  - AddDamage
+  - PlaySound
   DisableAutoOpenWizard: 1
   ShowSettings: 0

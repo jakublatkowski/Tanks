@@ -120,7 +120,7 @@ Transform:
   m_GameObject: {fileID: 4420517171850745122}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
   - {fileID: 7873049098964310488}
   m_Father: {fileID: 0}
@@ -154,8 +154,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13e6aba2bd9b66444bbd62ca247ca2f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 10
-  owner: {fileID: 0}
+  hitPoints: 34
+  explosionSoundEffect: {fileID: 8300000, guid: 8524588a69a4f3e40bb597b6221138f1,
+    type: 3}
 --- !u!114 &2804694070438585652
 MonoBehaviour:
   m_ObjectHideFlags: 0

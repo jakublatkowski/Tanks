@@ -1,8 +1,8 @@
 ﻿using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -12,10 +12,6 @@ public class TankController : MonoBehaviour
     [Header("Required Components")]
     public Transform bulletGenerator;
     public Barrel barrel;
-    public UIController ui;
-
-    [Header("Prefabs")]
-    public GameObject bulletPrefab;
 
     [Header("Control Properties")]
     public float rotationSpeed = 1.0f;
@@ -55,6 +51,8 @@ public class TankController : MonoBehaviour
 
     private Rigidbody tankRb;
     private Vector3 baseCenterOfMass;
+    private UIController ui;
+
     #endregion
 
     #region Properties
@@ -90,12 +88,14 @@ public class TankController : MonoBehaviour
     #endregion
 
     #region UnityMethodsOverride
+
     void Start()
     {
+        ui = GameObject.Find("Canvas").GetComponent<UIController>();
+
         tankRb = GetComponent<Rigidbody>();
         baseCenterOfMass = tankRb.centerOfMass;
         tankRb.centerOfMass += centerOfMassOffset;
-        ui = GameObject.Find("Canvas").GetComponent<UIController>();
 
         ui.SetHealthBarValue(1);
         ui.SetSpecialBarValue(0);
@@ -111,14 +111,7 @@ public class TankController : MonoBehaviour
     {
         if (_isGravityActive) Moving();
 
-        if (IsBarrelRaising)
-        {
-            barrel.Raise();
-        }
-        else
-        {
-            barrel.LowerDownToNormal();
-        }
+        MoveBarrel();
 
         if(!_isShootingActive && _timeToActivateShooting <= Time.time)
         {
@@ -133,6 +126,7 @@ public class TankController : MonoBehaviour
             if (specialBarValue >= 1) _isSpecialActive = false;
         }
     }
+
     void FixedUpdate()
     {
         // Calculate better gravity, when we don't touch ground.
@@ -153,24 +147,6 @@ public class TankController : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag.Equals("Bullet"))
-        {
-            Destroy(collision.collider);
-
-            var hitPoints = collision.gameObject.GetComponent<Bullet>().HitPoints;
-            healthPoints -= hitPoints;
-
-            ui.SetHealthBarValue(healthPoints / 100f);
-
-            if (healthPoints <= 0)
-            {
-                //do sth
-                Debug.Log("You Are Dead Man!");
-            }
-
-            Destroy(collision.gameObject);
-        }
-
         if (collision.gameObject.tag.Equals("Special"))
         {
             Destroy(collision.gameObject);
@@ -180,6 +156,13 @@ public class TankController : MonoBehaviour
             _isSpecialActive = true;
             timeSpecialActivated = Time.time;
         }
+
+        //if (collision.gameObject.tag.Equals("Bullet"))
+        //{
+        //    var bullet = collision.gameObject.GetComponent<Bullet>();
+        //    var attacker = collision.gameObject.GetPhotonView().Owner;
+        //    AddDamage(bullet.HitPoints, attacker);
+        //}
     }
 
     public void OnCollisionStay(Collision collision)
@@ -202,6 +185,7 @@ public class TankController : MonoBehaviour
     private void Moving()
     {
         if (!tankRb.GetComponent<PhotonView>().IsMine) return;
+
         Vector3 position;
         var rotation = new Vector3(0, (_leftForce - _rightForce) * rotationSpeed * Time.deltaTime);
 
@@ -218,6 +202,14 @@ public class TankController : MonoBehaviour
         var force = position * accelerationForce * Time.deltaTime;
 
         tankRb.AddForce(force, ForceMode.VelocityChange);
+    }
+
+    private void MoveBarrel()
+    {
+        if (!gameObject.GetComponent<PhotonView>().IsMine) return;
+
+        if (IsBarrelRaising) barrel.Raise();
+        else barrel.LowerDown();
     }
 
     public void Shot()
@@ -237,12 +229,49 @@ public class TankController : MonoBehaviour
         {
             //tworzenie pocisku
             GameObject bullet = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
-            Destroy(bullet, 5f); //jeżeli pocisk w nic nie trafi zniknie po 5 sekundach
-
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
             yield return new WaitForSeconds(.1f);
+        }
+    }
+
+    [PunRPC]
+    public void AddDamage(float value, Player attacker)
+    {
+        if (!gameObject.GetPhotonView().IsMine)
+        {
+            return;
+        }
+
+        healthPoints -= value;
+        ui.SetHealthBarValue(healthPoints / 100f);
+
+        if (healthPoints <= 0)
+        {
+            StartCoroutine(GameController.instance.RespawnTank(this, attacker));
+        }
+    }
+    public void DestroyMyBullet(GameObject bullet)
+    {
+        PhotonNetwork.Destroy(bullet);
+    }
+    public void ResetTank(float waitingTime)
+    {
+        if (gameObject.GetPhotonView().IsMine)
+        {
+            healthPoints = 100f;
+            _isSpecialActive = false;
+            timeSpecialActivated = Time.time;
+
+            ui.SetHealthBarValue(1);
+            ui.SetSpecialBarValue(0);
+
+            var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+            var index = Random.Range(0, spawnPoints.Length);
+
+            gameObject.transform.position = spawnPoints[index].transform.position;
+            gameObject.transform.rotation = spawnPoints[index].transform.rotation;
         }
     }
 }
