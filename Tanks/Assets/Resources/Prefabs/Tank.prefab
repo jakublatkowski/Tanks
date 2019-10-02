@@ -281,8 +281,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletGenerator: {fileID: 2818752361111453378}
   barrel: {fileID: 2818752363078358354}
-  rotationSpeed: 35
-  accelerationForce: 200
+  rotationSpeed: 45
+  accelerationForce: 75
   shotForce: 80
   gravityForce: 35
   centerOfMassOffset: {x: 0, y: -3, z: 0}

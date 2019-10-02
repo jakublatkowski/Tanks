@@ -70,11 +70,11 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         StartCoroutine("FlashError");
+        Debug.Log(PhotonNetwork.CountOfRooms);
         Debug.Log(message);
     }
     private System.Collections.IEnumerator FlashError()
     {
-        Debug.Log("Hello therE");
         errorText.SetActive(true);
         yield return new WaitForSeconds(5);
         errorText.SetActive(false);
