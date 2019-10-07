@@ -70,7 +70,7 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         StartCoroutine("FlashError");
-        errorText.GetComponent<Text>().text = "rooms: " + PhotonNetwork.CountOfRooms + " region: " + PhotonNetwork.CloudRegion + " appID: " + PhotonNetwork.PhotonServerSettings.GetInstanceID();
+        errorText.GetComponent<Text>().text = "There is no room with this PIN. Check if typed correctly!";
         Debug.Log(PhotonNetwork.CountOfRooms);
         Debug.Log(PhotonNetwork.CloudRegion);
         Debug.Log(message);
