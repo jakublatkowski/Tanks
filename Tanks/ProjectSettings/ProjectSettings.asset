@@ -790,7 +790,7 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   cloudProjectId: f77de279-37c5-425a-930c-98d0962de71e
   framebufferDepthMemorylessMode: 0
-  projectName: EffectsExamples
+  projectName: Tanks
   organizationId: tygrus21
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0

@@ -45,15 +45,10 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        foreach (var player in players)
-        {
-            if (player.GetPhotonView().IsMine)
-            {
-                tank = player.GetComponent<TankController>();
-                break;
-            }
-        }
+        var players = GameObject.FindGameObjectsWithTag("Player");
+        tank = players
+            .Single(player => player.GetPhotonView().IsMine)
+            .GetComponent<TankController>();
     }
     void Update()
     {

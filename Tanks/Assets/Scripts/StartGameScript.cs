@@ -20,6 +20,6 @@ public class StartGameScript : MonoBehaviour
         var index = Random.Range(0, spawnPoints.Length);
         var spawnPoint = spawnPoints[index];
 
-        tank = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Tank"), spawnPoint.transform.position, spawnPoint.transform.rotation);
+        tank = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "SuperTank"), spawnPoint.transform.position, spawnPoint.transform.rotation);
     }
 }
