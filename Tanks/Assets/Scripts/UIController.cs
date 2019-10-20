@@ -12,10 +12,10 @@ public class UIController : MonoBehaviour
     private Slider playerHealthSlider;
 
     [SerializeField]
-    private Scrollbar leftScrollbar;
+    private Joystick leftJoystick;
 
     [SerializeField]
-    private Scrollbar rightScrollbar;
+    private Joystick rightJoystick;
 
     [SerializeField]
     private Image healthBarImage;
@@ -59,14 +59,14 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public float GetLeftSrollBarValue()
+    public float GetLeftJoystickVertical()
     {
-        return leftScrollbar.value;
+        return leftJoystick.Vertical;
     }
 
-    public float GetRightSrollBarValue()
+    public float GetRightJoystickVertical()
     {
-        return rightScrollbar.value;
+        return rightJoystick.Vertical;
     }
 
     public void PlayShootingDelayAnimation()
@@ -75,11 +75,6 @@ public class UIController : MonoBehaviour
         shootingLagPanel.SetActive(true);
     }
 
-    public void SetScrollbarsDefault()
-    {
-        rightScrollbar.value = 0.5f;
-        leftScrollbar.value = 0.5f;
-    }
     public void Update()
     {
     }
