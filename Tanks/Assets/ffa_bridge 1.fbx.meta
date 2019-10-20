@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6e789763b925e1c42a4f343f2dc96fda
+guid: ecef8ed76af3a4546973c71184d0c732
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -9,6 +9,7 @@ ModelImporter:
     2100002: Grass
     2100004: HighGround
     2100006: Cliff
+    2100008: Barrier
     2300000: //RootNode
     3300000: //RootNode
     4300000: Map
