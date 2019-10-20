@@ -1,0 +1,81 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+
+public class UIController : MonoBehaviour
+{
+    [Tooltip("UI Text to display Player's Name")]
+    [SerializeField]
+    private Text playerNameText;
+    
+    [Tooltip("UI Slider to display Player's Health")]
+    [SerializeField]
+    private Slider playerHealthSlider;
+
+    [SerializeField]
+    private Joystick leftJoystick;
+
+    [SerializeField]
+    private Joystick rightJoystick;
+
+    [SerializeField]
+    private Image healthBarImage;
+
+    [SerializeField]
+    private Image specialBarImage;
+
+    [SerializeField]
+    private GameObject shootingLagPanel;
+
+    public void SetHealthBarValue(float val)
+    {
+        if (val <= 1 && val >= 0)
+            healthBarImage.fillAmount = val;
+        else if (val < 0)
+        {
+            Debug.Log("HealthBar value < 0");
+            healthBarImage.fillAmount = 0;
+        }
+        else
+        {
+            Debug.Log("HealthBar Value > 1");
+            healthBarImage.fillAmount = 1;
+        }
+
+    }
+
+    public void SetSpecialBarValue(float val)
+    {
+        if (val <= 1 && val >= 0)
+            specialBarImage.fillAmount = val;
+        else if (val < 0)
+        {
+            Debug.Log("SpecialBar Value < 0");
+            specialBarImage.fillAmount = 0;
+        }
+        else
+        {
+            Debug.Log("SpecialBar Value > 1");
+            specialBarImage.fillAmount = 1;
+        }
+    }
+
+    public float GetLeftJoystickVertical()
+    {
+        return leftJoystick.Vertical;
+    }
+
+    public float GetRightJoystickVertical()
+    {
+        return rightJoystick.Vertical;
+    }
+
+    public void PlayShootingDelayAnimation()
+    {
+        shootingLagPanel.SetActive(false);
+        shootingLagPanel.SetActive(true);
+    }
+
+    public void Update()
+    {
+    }
+}
