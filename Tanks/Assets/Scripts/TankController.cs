@@ -17,6 +17,7 @@ public class TankController : MonoBehaviour
     public float rotationSpeed = 1.0f;
     public float accelerationForce = 1.0f;
     public float shotForce = 10f;
+    public float maxSpeed = 20.0f;
 
     [Header("Gravity Settings")]
     public float gravityForce = 10f;
@@ -106,18 +107,10 @@ public class TankController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Calculate better gravity, when we don't touch ground.
-        if (!_isGravityActive)
-        {
-            // Disable Unitys gravity
-            tankRb.useGravity = false;
-            // And enable Better Gravity
-            tankRb.AddForce(Physics.gravity * gravityForce * gravityForce);
-        }
-        else
-        {
-            tankRb.useGravity = true;
-        }
+        // Disable Unitys gravity
+        tankRb.useGravity = false;
+        // And enable Better Gravity
+        tankRb.AddForce(Physics.gravity * gravityForce * gravityForce);
 
         tankRb.centerOfMass = baseCenterOfMass + centerOfMassOffset;
     }
@@ -178,7 +171,10 @@ public class TankController : MonoBehaviour
         gameObject.transform.Rotate(rotation, Space.Self);
         var force = position * accelerationForce * Time.deltaTime;
 
-        tankRb.AddForce(force, ForceMode.VelocityChange);
+        var speed = tankRb.velocity.magnitude;
+
+        if (speed < maxSpeed)
+            tankRb.AddForce(force, ForceMode.VelocityChange);
     }
 
     private void MoveBarrel()

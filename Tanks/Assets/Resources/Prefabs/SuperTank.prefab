@@ -247,8 +247,8 @@ Rigidbody:
   m_GameObject: {fileID: 9201080865368397341}
   serializedVersion: 2
   m_Mass: 50
-  m_Drag: 0
-  m_AngularDrag: 0
+  m_Drag: 0.02
+  m_AngularDrag: 0.02
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -269,10 +269,11 @@ MonoBehaviour:
   bulletGenerator: {fileID: 281878171381172133}
   barrel: {fileID: 4367415128093617349}
   rotationSpeed: 45
-  accelerationForce: 75
+  accelerationForce: 500
   shotForce: 80
+  maxSpeed: 55
   gravityForce: 35
-  centerOfMassOffset: {x: 0, y: -3, z: 0}
+  centerOfMassOffset: {x: 0, y: -4, z: 0}
   cameraDistance: 35
   cameraPositionYRatio: 0.237
   cameraPositionZRatio: 1
@@ -422,7 +423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4437434d20295e241843fcaf197e432a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raisingSpeed: 1
+  raisingSpeed: 3
   loweringSpeed: 3
   maxAngle: 70
   minAngle: 0
