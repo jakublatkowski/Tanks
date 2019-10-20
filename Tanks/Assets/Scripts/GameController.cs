@@ -10,16 +10,6 @@ public class GameController : MonoBehaviour
     public static GameController instance;
     public static TankController tank;
 
-    public float TankLeftForce
-    {
-        set => tank.LeftForce = value;
-    }
-
-    public float TankRightForce
-    {
-        set => tank.RightForce = value;
-    }
-
     public bool TankRaiseBarrel
     {
         set => tank.IsBarrelRaising = value;

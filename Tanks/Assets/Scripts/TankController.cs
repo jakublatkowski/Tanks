@@ -56,32 +56,6 @@ public class TankController : MonoBehaviour
     #endregion
 
     #region Properties
-    public float LeftForce
-    {
-        set
-        {
-            if (value > 1) _leftForce = 1;
-            else if (value < 0) _leftForce = 0;
-            else
-            {
-                _leftForce = value - .5f;
-            }
-        }
-    }
-
-    public float RightForce
-    {
-        set
-        {
-            if (value > 1) _rightForce = 1;
-            else if (value < 0) _rightForce = 0;
-            else
-            {
-                _rightForce = value - .5f;
-            }
-        }
-    }
-
     public float HealthPoints => healthPoints;
 
     public bool IsBarrelRaising { get; set; }
@@ -109,6 +83,9 @@ public class TankController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _leftForce = ui.GetLeftJoystickVertical();
+        _rightForce = ui.GetRightJoystickVertical();
+
         if (_isGravityActive) Moving();
 
         MoveBarrel();
