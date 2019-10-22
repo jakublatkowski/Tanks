@@ -35,6 +35,7 @@ public class TankColorDropDownScript : MonoBehaviourPun
             }
             int oldValue = _currentIndex;
             _currentIndex = value;
+            PlayerPrefs.SetString("Color", value.ToString());
             OnCurrentIndexChanged(oldValue);
         }
     }

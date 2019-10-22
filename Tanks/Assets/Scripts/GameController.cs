@@ -47,6 +47,14 @@ public class GameController : MonoBehaviour
             Start();
         }
     }
+
+    public void EndGame()
+    {
+        PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel("MenuScrene");
+    }
+
     public IEnumerator RespawnTank(TankController damagedTank, Player attacker)
     {
         //Get Attacker's tank

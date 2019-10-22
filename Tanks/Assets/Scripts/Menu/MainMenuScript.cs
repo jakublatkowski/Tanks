@@ -30,7 +30,8 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
         lobbyConnectButton.SetActive(true);
-        
+        PlayerPrefs.SetString("Type", "Klient");
+
         if (PlayerPrefs.HasKey("NickName"))
         {
             if (playerName.text == "")
