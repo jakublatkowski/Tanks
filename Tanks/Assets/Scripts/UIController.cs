@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Color = Assets.Scripts.Color;
 
 public class UIController : MonoBehaviour
 {

@@ -1,5 +1,4 @@
 using Photon.Pun;
-using System;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -40,17 +39,19 @@ public class Bullet : MonoBehaviour
             // Add points
             HandlePoints();
 
-            collision.gameObject.GetPhotonView().RPC(nameof(TankController.AddDamage), RpcTarget.All, hitPoints, attackingPlayer.GetPhotonView().Owner);
+            // Add damage
+            collision.gameObject.GetPhotonView()
+                .RPC(nameof(TankController.AddDamage), RpcTarget.All, hitPoints, attackingPlayer.GetPhotonView().Owner);
         }
         
         //Make Explosion
-        if (collision.gameObject.tag.Equals("Player"))
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "SmallExplosion"), this.transform.position, this.transform.rotation);
-        else
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "TinyExplosion"), this.transform.position, this.transform.rotation);
+        PhotonNetwork.Instantiate(
+            collision.gameObject.tag.Equals("Player")
+                ? Path.Combine("Prefabs", "SmallExplosion")
+                : Path.Combine("Prefabs", "TinyExplosion"), this.transform.position, this.transform.rotation);
 
         //Play Sound effect
-        this.gameObject.GetPhotonView().RPC("PlaySound", RpcTarget.All);
+        this.gameObject.GetPhotonView().RPC(nameof(this.PlaySound), RpcTarget.All);
 
         //Destroy bullet
         attackingPlayer.GetComponent<TankController>().DestroyMyBullet(this.gameObject);
