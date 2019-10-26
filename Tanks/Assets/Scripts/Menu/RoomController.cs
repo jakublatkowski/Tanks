@@ -49,13 +49,16 @@ public class RoomController : MonoBehaviourPunCallbacks
         roomPanel.SetActive(true);
         lobbyPanel.SetActive(false);
         roomName.text = PhotonNetwork.CurrentRoom.Name;
+        GameObject[] components = GameObject.FindGameObjectsWithTag("MainPlayer");
         if (PhotonNetwork.IsMasterClient)
         {
-            startButton.SetActive(true);
+            foreach (GameObject comp in components)
+                comp.SetActive(true);
         }
         else
         {
-            startButton.SetActive(false);
+            foreach (GameObject comp in components)
+                comp.SetActive(false);
         }
         ClearPlayerListings();
         ListPlayers();
@@ -78,9 +81,16 @@ public class RoomController : MonoBehaviourPunCallbacks
     {
         ClearPlayerListings();
         ListPlayers();
+        GameObject[] components = GameObject.FindGameObjectsWithTag("MainPlayer");
         if (PhotonNetwork.IsMasterClient)
         {
-            startButton.SetActive(true);
+            foreach (GameObject comp in components)
+                comp.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject comp in components)
+                comp.SetActive(false);
         }
     }
     public void StartGame()

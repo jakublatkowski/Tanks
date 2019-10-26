@@ -84,7 +84,7 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     }
     public void CreateRoom()
     {
-        int roomSize = 8;
+        int roomSize = 9;
         string roomName = Random.Range(0, 99999).ToString();
         ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable()
             { { "0", "Red" }, { "1", "Blue" }, { "2", "Green" }, { "3", "Yellow" }, { "4", "White" }, { "5", "Black" }, { "6", "Magenta" }, { "7", "Purple" } };
