@@ -58,11 +58,7 @@ public class Bullet : MonoBehaviour
 
     private void HandlePoints()
     {
-        int points = 10;
         var color = PlayerPrefs.GetString("Color");
-        color = Color.ToColor(color);
-        
-            //bulletsOwner.GetColor TODO: <==================================== ZROBIC POBIERANIE KOLORÓW Z PLAYERA
         
         /* TODO HANDLE FRIENDLY FIRE
          * if(bulletsOwner.GetColor == collision Get Color)
@@ -71,7 +67,8 @@ public class Bullet : MonoBehaviour
          * }
          * else
          */
-        pointsController.gameObject.GetPhotonView().RPC("AddPoints", RpcTarget.All, color, points);
+        pointsController.gameObject.GetPhotonView()
+            .RPC(nameof(PointsController.AddPoints), RpcTarget.All, color, colorPoints);
     }
 
     [PunRPC]
