@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using Color = Assets.Scripts.Color;
 
 public class PointsController : MonoBehaviour
@@ -12,6 +13,7 @@ public class PointsController : MonoBehaviour
     public int MagentaPoints { get; private set; }
     public int PurplePoints { get; private set; }
 
+    [PunRPC]
     public void AddPoints(string color, int points)
     {
         switch (color)

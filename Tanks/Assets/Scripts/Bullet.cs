@@ -57,6 +57,7 @@ public class Bullet : MonoBehaviour
 
     private void HandlePoints()
     {
+        int points = 10;
         var
             color = Color
                 .Green; //bulletsOwner.GetColor TODO: <==================================== ZROBIC POBIERANIE KOLORÓW Z PLAYERA
@@ -68,7 +69,7 @@ public class Bullet : MonoBehaviour
          * }
          * else
          */
-        pointsController.AddPoints(color, colorPoints);
+        pointsController.gameObject.GetPhotonView().RPC("AddPoints", RpcTarget.All, color, points);
     }
 
     [PunRPC]
