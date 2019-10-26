@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -58,10 +59,11 @@ public class Bullet : MonoBehaviour
     private void HandlePoints()
     {
         int points = 10;
-        var
-            color = Color
-                .Green; //bulletsOwner.GetColor TODO: <==================================== ZROBIC POBIERANIE KOLORÓW Z PLAYERA
-
+        var color = PlayerPrefs.GetString("Color");
+        color = Color.ToColor(color);
+        
+            //bulletsOwner.GetColor TODO: <==================================== ZROBIC POBIERANIE KOLORÓW Z PLAYERA
+        
         /* TODO HANDLE FRIENDLY FIRE
          * if(bulletsOwner.GetColor == collision Get Color)
          * {
