@@ -1,9 +1,8 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Color = Assets.Scripts.Color;
 
 public class Bullet : MonoBehaviour
 {
@@ -14,10 +13,15 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private AudioClip explosionSoundEffect;
 
-    public float HitPoints { get { return hitPoints; } }
+    private PointsController pointsController;
 
+    public float HitPoints { get { return hitPoints; } }
+    public int colorPoints = 5;
+    
     private void Start()
     {
+        pointsController = GameObject.Find(nameof(PointsController)).GetComponent<PointsController>();
+
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
     }
@@ -32,6 +36,9 @@ public class Bullet : MonoBehaviour
         //if collison happened with another player then add damage
         if (collision.gameObject.tag.Equals("Player"))
         {
+            // Add points
+            HandlePoints();
+
             collision.gameObject.GetPhotonView().RPC(nameof(TankController.AddDamage), RpcTarget.All, hitPoints, attackingPlayer.GetPhotonView().Owner);
         }
         
@@ -47,7 +54,23 @@ public class Bullet : MonoBehaviour
         //Destroy bullet
         attackingPlayer.GetComponent<TankController>().DestroyMyBullet(this.gameObject);
     }
-    
+
+    private void HandlePoints()
+    {
+        var
+            color = Color
+                .Green; //bulletsOwner.GetColor TODO: <==================================== ZROBIC POBIERANIE KOLORÓW Z PLAYERA
+
+        /* TODO HANDLE FRIENDLY FIRE
+         * if(bulletsOwner.GetColor == collision Get Color)
+         * {
+         *      pointsController.AddPoints(color, -ColorPoints);
+         * }
+         * else
+         */
+        pointsController.AddPoints(color, colorPoints);
+    }
+
     [PunRPC]
     private void PlaySound()
     {

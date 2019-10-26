@@ -2,7 +2,6 @@
 using Photon.Realtime;
 using System.Collections;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 
