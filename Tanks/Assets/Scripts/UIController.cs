@@ -6,25 +6,29 @@ public class UIController : MonoBehaviour
     [Tooltip("UI Text to display Player's Name")]
     [SerializeField]
     private Text playerNameText;
-    
+
     [Tooltip("UI Slider to display Player's Health")]
     [SerializeField]
     private Slider playerHealthSlider;
 
-    [SerializeField]
-    private Joystick leftJoystick;
+    [Header("Colors-Points Panels")]
+    public GameObject redPanel;
+    public GameObject bluePanel;
+    public GameObject greenPanel;
+    public GameObject yellowPanel;
+    public GameObject whitePanel;
+    public GameObject blackPanel;
+    public GameObject magentaPanel;
+    public GameObject purplePanel;
 
-    [SerializeField]
-    private Joystick rightJoystick;
+    [Header("Controls")]
+    public Joystick leftJoystick;
+    public Joystick rightJoystick;
+    public Image healthBarImage;
+    public Image specialBarImage;
+    public GameObject shootingLagPanel;
 
-    [SerializeField]
-    private Image healthBarImage;
-
-    [SerializeField]
-    private Image specialBarImage;
-
-    [SerializeField]
-    private GameObject shootingLagPanel;
+    private PointsController pointsController;
 
     public void SetHealthBarValue(float val)
     {
@@ -75,7 +79,25 @@ public class UIController : MonoBehaviour
         shootingLagPanel.SetActive(true);
     }
 
-    public void Update()
+    private void SetPoints()
     {
+        redPanel.GetComponentInChildren<Text>().text = pointsController.RedPoints.ToString();
+        bluePanel.GetComponentInChildren<Text>().text = pointsController.BluePoints.ToString();
+        greenPanel.GetComponentInChildren<Text>().text = pointsController.GreenPoints.ToString();
+        yellowPanel.GetComponentInChildren<Text>().text = pointsController.YellowPoints.ToString();
+        whitePanel.GetComponentInChildren<Text>().text = pointsController.WhitePoints.ToString();
+        blackPanel.GetComponentInChildren<Text>().text = pointsController.BlackPoints.ToString();
+        magentaPanel.GetComponentInChildren<Text>().text = pointsController.MagentaPoints.ToString();
+        purplePanel.GetComponentInChildren<Text>().text = pointsController.PurplePoints.ToString();
+    }
+
+    void Start()
+    {
+        pointsController = GameObject.Find(nameof(PointsController)).GetComponent<PointsController>();
+    }
+
+    public void FixedUpdate()
+    {
+        SetPoints();
     }
 }

@@ -34,5 +34,6 @@ MonoBehaviour:
   - GetListFromRoom
   - AddDamage
   - PlaySound
+  - AddPoints
   DisableAutoOpenWizard: 1
   ShowSettings: 0

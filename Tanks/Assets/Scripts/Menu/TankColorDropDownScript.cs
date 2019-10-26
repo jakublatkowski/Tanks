@@ -64,7 +64,9 @@ public class TankColorDropDownScript : MonoBehaviourPun
 
 
         Label.GetComponent<Text>().text = ListOfItems[CurrentIndex];
-        
+
+        PlayerPrefs.SetString("Color", ListOfItems[CurrentIndex]);
+
         GetComponentInParent<PhotonView>().RPC(nameof(this.RemoveFromList), RpcTarget.All, CurrentIndex);
         
         ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();

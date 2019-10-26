@@ -2,7 +2,6 @@
 using Photon.Realtime;
 using System.Collections;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 
@@ -201,7 +200,8 @@ public class TankController : MonoBehaviour
         for (var i = 0; i < bulletsToSpawn; i++)
         {
             //tworzenie pocisku
-            GameObject bullet = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
+            GameObject bullet = 
+                PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
