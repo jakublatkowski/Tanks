@@ -12,16 +12,7 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     private void Start()
     {
-        var players = GameObject.FindGameObjectsWithTag("Player");
-
-        foreach (var player in players)
-        {
-            if (player.GetPhotonView().IsMine)
-            {
-                WatchedTank = player;
-                break;
-            }
-        }
+        WatchedTank = TankController.FindMyTank();
 
         SetUpCameraPosition(WatchedTank.transform);
     }

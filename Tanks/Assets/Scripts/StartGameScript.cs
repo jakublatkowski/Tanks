@@ -7,10 +7,12 @@ using UnityEngine;
 public class StartGameScript : MonoBehaviour
 {
     public GameObject tank;
+    private TankColorDropDownScript tankColorDropDownScript;
     // Start is called before the first frame update
     void Start()
     {
         CreatePlayer();
+        tankColorDropDownScript = FindObjectOfType<TankColorDropDownScript>();
     }
 
     // Update is called once per frame
@@ -21,5 +23,6 @@ public class StartGameScript : MonoBehaviour
         var spawnPoint = spawnPoints[index];
 
         tank = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "SuperTank"), spawnPoint.transform.position, spawnPoint.transform.rotation);
+        TankController.SetTankColor(tank, new Color(1.0f, 1.0f, 1.0f));
     }
 }

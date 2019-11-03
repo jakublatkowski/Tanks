@@ -86,7 +86,14 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
         int roomSize = 8;
         string roomName = Random.Range(0, 99999).ToString();
         ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable()
-            { { "0", "Red" }, { "1", "Blue" }, { "2", "Green" }, { "3", "Yellow" }, { "4", "White" }, { "5", "Black" }, { "6", "Magenta" }, { "7", "Purple" } };
+            { { "0", "Red" },
+            { "1", "Blue" },
+            { "2", "Green" },
+            { "3", "Yellow" },
+            { "4", "White" },
+            { "5", "Black" },
+            { "6", "Magenta" },
+            { "7", "Cyan" } };
         RoomOptions roomOpt = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize, CustomRoomProperties = table };
         PhotonNetwork.CreateRoom(roomName, roomOpt);
     }
@@ -95,5 +102,30 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
         mainPanel.SetActive(true);
         lobbyPanel.SetActive(false);
         PhotonNetwork.LeaveLobby();
+    }
+
+    public static Color GetColorFromName (string name)
+    {
+        switch (name)
+        {
+            case "Red":
+                return new Color(0.8f, 0.0f, 0.0f);
+            case "Blue":
+                return new Color(0.0f, 0.0f, 0.8f);
+            case "Green":
+                return new Color(0.0f, 0.8f, 0.0f);
+            case "Yellow":
+                return new Color(0.8f, 0.8f, 0.0f);
+            case "White":
+                return new Color(0.8f, 0.8f, 0.8f);
+            case "Black":
+                return new Color(0.0f, 0.0f, 0.0f);
+            case "Magenta":
+                return new Color(0.8f, 0.0f, 0.8f);
+            case "Cyan":
+                return new Color(0.0f, 0.8f, 0.8f);
+            default:
+                return new Color(0.0f, 0.0f, 0.0f);
+        }
     }
 }

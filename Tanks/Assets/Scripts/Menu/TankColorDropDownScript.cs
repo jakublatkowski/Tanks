@@ -19,6 +19,8 @@ public class TankColorDropDownScript : MonoBehaviourPun
     [SerializeField]
     private List<string> ListOfItems = new List<string>();
 
+    private Color myColor;
+
     private int _currentIndex;
     private int CurrentIndex
     {
@@ -38,6 +40,12 @@ public class TankColorDropDownScript : MonoBehaviourPun
             OnCurrentIndexChanged(oldValue);
         }
     }
+
+    public Color MyColor
+    {
+        get { return myColor; }
+    }
+
     public void Click(GameObject button)
     {
         if (ListOfItems.Count == 0) return;
@@ -64,7 +72,8 @@ public class TankColorDropDownScript : MonoBehaviourPun
 
 
         Label.GetComponent<Text>().text = ListOfItems[CurrentIndex];
-
+        myColor = MainMenuScript.GetColorFromName(ListOfItems[CurrentIndex]);
+        PreviewTankScript.ChangeTankColor(myColor);
         PlayerPrefs.SetString("Color", ListOfItems[CurrentIndex]);
 
         GetComponentInParent<PhotonView>().RPC(nameof(this.RemoveFromList), RpcTarget.All, CurrentIndex);

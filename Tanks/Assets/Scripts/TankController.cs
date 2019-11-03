@@ -150,7 +150,6 @@ public class TankController : MonoBehaviour
         }
     }
     #endregion
-
     private void Moving()
     {
         if (!tankRb.GetComponent<PhotonView>().IsMine) return;
@@ -246,5 +245,35 @@ public class TankController : MonoBehaviour
             gameObject.transform.position = spawnPoints[index].transform.position;
             gameObject.transform.rotation = spawnPoints[index].transform.rotation;
         }
+    }
+
+    public static void SetTankColor(GameObject obj, Color color)
+    {
+        Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            Material[] materials = renderer.GetComponent<Renderer>().materials;
+            foreach (Material material in materials)
+            {
+                if (material.name.Contains("Primary"))
+                {
+                    material.SetColor("_Color", color);
+                }
+            }
+        }
+    }
+
+    public static GameObject FindMyTank()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var player in players)
+        {
+            if (player.GetPhotonView().IsMine)
+            {
+                return player;
+            }
+        }
+        return null;
     }
 }
