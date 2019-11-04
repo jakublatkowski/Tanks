@@ -10,6 +10,7 @@ TagManager:
   - Special
   - Map
   - SpawnPoint
+  - MainPlayer
   layers:
   - Default
   - TransparentFX

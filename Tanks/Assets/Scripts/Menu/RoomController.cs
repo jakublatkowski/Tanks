@@ -22,9 +22,17 @@ public class RoomController : MonoBehaviourPunCallbacks
 
     [SerializeField]
     private GameObject gameMode;
+    [SerializeField]
+    private GameObject gameTime;
 
     [SerializeField]
     private Text roomName;
+
+    [SerializeField]
+    private List<GameObject> components;
+
+    [SerializeField]
+    private GameObject colorDropDown;
 
     void ClearPlayerListings()
     {
@@ -32,7 +40,20 @@ public class RoomController : MonoBehaviourPunCallbacks
         {
             Destroy(playersContainer.GetChild(i).gameObject);
         }
-    }
+    } //done
+    void ActivatePanels()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (GameObject comp in components)
+                comp.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject comp in components)
+                comp.SetActive(false);
+        }
+    } //done
     void ListPlayers()
     {
         foreach (Player player in PhotonNetwork.PlayerList)
@@ -41,51 +62,41 @@ public class RoomController : MonoBehaviourPunCallbacks
             Text tmpText = tmpListing.transform.GetChild(0).GetComponent<Text>();
             tmpText.text = player.NickName;
         }
-    }
+    } //done
     public override void OnJoinedRoom()
     {
+        colorDropDown.SetActive(true);
         roomPanel.SetActive(true);
         lobbyPanel.SetActive(false);
         roomName.text = PhotonNetwork.CurrentRoom.Name;
-        if (PhotonNetwork.IsMasterClient)
-        {
-            startButton.SetActive(true);
-        }
-        else
-        {
-            startButton.SetActive(false);
-        }
+        ActivatePanels();
         ClearPlayerListings();
         ListPlayers();
-    }
+    } //done
     public void OnGameModeChanged()
     {
-        // główny gracz zmienił tryb rozgrywki
-        if (gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text == "Deathmatch")
-        { // jeżeli wybrał deatchmatch
-            Debug.Log("LOL");
-        }
-        else if (gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text == "TeamDeathmatch")
-        { // jeżeli wybrał team deathmatch
-            Debug.Log("team LOL");
+        string mode = gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text;
 
-        }
-    }
+        PlayerPrefs.SetString("Mode", mode);
+        PhotonNetwork.CurrentRoom.CustomProperties["Mode"] = mode;
+    } //done
+    public void OnGameTimeChanged()
+    {
+        PlayerPrefs.SetString("Time", gameTime.GetComponent<Dropdown>().options[gameTime.GetComponent<Dropdown>().value].text);
+    } //done
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         ClearPlayerListings();
         ListPlayers();
-    }
-
+    } //done
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         ClearPlayerListings();
         ListPlayers();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            startButton.SetActive(true);
-        }
-    }
+        ActivatePanels();
+    } //done
+
     public void StartGame()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -100,14 +111,14 @@ public class RoomController : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(1);
         PhotonNetwork.JoinLobby();
-    }
-
+    } //done
     public void BackOnClick()
     {
+        colorDropDown.SetActive(false);
         roomPanel.SetActive(false);
         lobbyPanel.SetActive(true);
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LeaveLobby();
         StartCoroutine(rejoinLobby());
-    }
+    } //done
 }

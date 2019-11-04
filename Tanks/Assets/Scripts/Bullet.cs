@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float hitPoints;
-    
+
     private Rigidbody m_Rigidbody;
     [SerializeField]
     private AudioClip explosionSoundEffect;
@@ -17,7 +17,7 @@ public class Bullet : MonoBehaviour
 
     public float HitPoints { get { return hitPoints; } }
     public int colorPoints = 5;
-    
+
     private void Start()
     {
         pointsController = GameObject.Find(nameof(PointsController)).GetComponent<PointsController>();
@@ -25,14 +25,14 @@ public class Bullet : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
     }
-    
+
     private void OnCollisionEnter(Collision collision)
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
         var bulletsOwner = this.GetComponentInParent<PhotonView>().Owner;
         //Find player that shot bullet
         var attackingPlayer = players.Single(player => player.GetPhotonView().Owner == bulletsOwner);
-        
+
         //if collison happened with another player then add damage
         if (collision.gameObject.tag.Equals("Player"))
         {
@@ -43,7 +43,7 @@ public class Bullet : MonoBehaviour
             collision.gameObject.GetPhotonView()
                 .RPC(nameof(TankController.AddDamage), RpcTarget.All, hitPoints, attackingPlayer.GetPhotonView().Owner);
         }
-        
+
         //Make Explosion
         PhotonNetwork.Instantiate(
             collision.gameObject.tag.Equals("Player")
@@ -60,7 +60,7 @@ public class Bullet : MonoBehaviour
     private void HandlePoints()
     {
         var color = PlayerPrefs.GetString("Color");
-        
+
         /* TODO HANDLE FRIENDLY FIRE
          * if(bulletsOwner.GetColor == collision Get Color)
          * {
