@@ -5414,7 +5414,7 @@ MonoBehaviour:
   whitePanel: {fileID: 407940917}
   blackPanel: {fileID: 778869278}
   magentaPanel: {fileID: 1447736399}
-  cyanPanel: {fileID: 0}
+  cyanPanel: {fileID: 1521647884}
   leftJoystick: {fileID: 918487580}
   rightJoystick: {fileID: 713506976}
   healthBarImage: {fileID: 8438167792791707708}
