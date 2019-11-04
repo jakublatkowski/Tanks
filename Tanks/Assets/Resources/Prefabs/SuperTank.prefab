@@ -268,6 +268,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletGenerator: {fileID: 281878171381172133}
   barrel: {fileID: 4367415128093617349}
+  explosionSoundEffect: {fileID: 8300000, guid: 8524588a69a4f3e40bb597b6221138f1,
+    type: 3}
   rotationSpeed: 45
   accelerationForce: 500
   shotForce: 80

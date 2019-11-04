@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -13,12 +14,12 @@ public class GameController : MonoBehaviour
     public bool TankRaiseBarrel
     {
         set => tank.IsBarrelRaising = value;
-    }
+    } // Done
 
     public void TankShot()
     {
         tank.Shot();
-    }
+    } // Done
 
     void Awake()
     {
@@ -30,7 +31,7 @@ public class GameController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
+    } // Done
 
     // Start is called before the first frame update
     void Start()
@@ -39,21 +40,29 @@ public class GameController : MonoBehaviour
         tank = players
             .Single(player => player.GetPhotonView().IsMine)
             .GetComponent<TankController>();
-    }
+    } // Done
     void Update()
     {
         if (tank == null)
         {
             Start();
         }
-    }
+    } // Done
 
     public void EndGame()
     {
+        StartCoroutine(DisconectAndReturn());
+    } // Done
+    private IEnumerator DisconectAndReturn()
+    {
         PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
         PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveLobby();
+        PhotonNetwork.Disconnect();
+        while (PhotonNetwork.IsConnected)
+            yield return null;
         PhotonNetwork.LoadLevel("MenuScrene");
-    }
+    } // Done
 
     public IEnumerator RespawnTank(TankController damagedTank, Player attacker)
     {
@@ -70,9 +79,13 @@ public class GameController : MonoBehaviour
         var canvas = GameObject.Find("Canvas");
         canvas.SetActive(false);
 
+        //Big explosion
+        PhotonNetwork.Instantiate(Path.Combine("Prefabs", "BigExplosion"), damagedTank.gameObject.transform.position, damagedTank.gameObject.transform.rotation);
+        damagedTank.GetComponentInParent<PhotonView>().RPC(nameof(damagedTank.PlaySound), RpcTarget.All);
+
         // TODO: Show sth
 
-        // TODO: Change damaged tank texture
+        // TODO: Change damaged tank texture        
 
         // Wait for enable UI
         yield return new WaitForSeconds(5);

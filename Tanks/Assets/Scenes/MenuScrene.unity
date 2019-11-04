@@ -267,6 +267,13 @@ MonoBehaviour:
   gameMode: {fileID: 79702366}
   gameTime: {fileID: 1429597334}
   roomName: {fileID: 1579617036}
+  components:
+  - {fileID: 965450698}
+  - {fileID: 79702366}
+  - {fileID: 43853859}
+  - {fileID: 1429597334}
+  - {fileID: 1851879364}
+  colorDropDown: {fileID: 7102988}
 --- !u!4 &18674285
 Transform:
   m_ObjectHideFlags: 0
@@ -2082,7 +2089,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 542677761}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -4623,7 +4630,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565230424}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -4867,7 +4874,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1659382918}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 

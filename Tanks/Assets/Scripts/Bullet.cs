@@ -42,7 +42,7 @@ public class Bullet : MonoBehaviour
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "TinyExplosion"), this.transform.position, this.transform.rotation);
 
         //Play Sound effect
-        this.gameObject.GetPhotonView().RPC("PlaySound", RpcTarget.All);
+        this.gameObject.GetPhotonView().RPC(nameof(PlaySound), RpcTarget.All);
 
         //Destroy bullet
         attackingPlayer.GetComponent<TankController>().DestroyMyBullet(this.gameObject);

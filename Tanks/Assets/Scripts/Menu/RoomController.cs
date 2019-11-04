@@ -28,13 +28,32 @@ public class RoomController : MonoBehaviourPunCallbacks
     [SerializeField]
     private Text roomName;
 
+    [SerializeField]
+    private List<GameObject> components;
+
+    [SerializeField]
+    private GameObject colorDropDown;
+
     void ClearPlayerListings()
     {
         for (int i = playersContainer.childCount -1; i>=0; i--)
         {
             Destroy(playersContainer.GetChild(i).gameObject);
         }
-    }
+    } //done
+    void ActivatePanels()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (GameObject comp in components)
+                comp.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject comp in components)
+                comp.SetActive(false);
+        }
+    } //done
     void ListPlayers()
     {
         foreach (Player player in PhotonNetwork.PlayerList)
@@ -43,56 +62,41 @@ public class RoomController : MonoBehaviourPunCallbacks
             Text tmpText = tmpListing.transform.GetChild(0).GetComponent<Text>();
             tmpText.text = player.NickName;
         }
-    }
+    } //done
     public override void OnJoinedRoom()
     {
+        colorDropDown.SetActive(true);
         roomPanel.SetActive(true);
         lobbyPanel.SetActive(false);
         roomName.text = PhotonNetwork.CurrentRoom.Name;
-        GameObject[] components = GameObject.FindGameObjectsWithTag("MainPlayer");
-        if (PhotonNetwork.IsMasterClient)
-        {
-            foreach (GameObject comp in components)
-                comp.SetActive(true);
-        }
-        else
-        {
-            foreach (GameObject comp in components)
-                comp.SetActive(false);
-        }
+        ActivatePanels();
         ClearPlayerListings();
         ListPlayers();
-    }
+    } //done
     public void OnGameModeChanged()
     {
-        PlayerPrefs.SetString("Mode", gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text);
-    }
+        string mode = gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text;
+
+        PlayerPrefs.SetString("Mode", mode);
+        PhotonNetwork.CurrentRoom.CustomProperties["Mode"] = mode;
+    } //done
     public void OnGameTimeChanged()
     {
         PlayerPrefs.SetString("Time", gameTime.GetComponent<Dropdown>().options[gameTime.GetComponent<Dropdown>().value].text);
-    }
+    } //done
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         ClearPlayerListings();
         ListPlayers();
-    }
-
+    } //done
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         ClearPlayerListings();
         ListPlayers();
-        GameObject[] components = GameObject.FindGameObjectsWithTag("MainPlayer");
-        if (PhotonNetwork.IsMasterClient)
-        {
-            foreach (GameObject comp in components)
-                comp.SetActive(true);
-        }
-        else
-        {
-            foreach (GameObject comp in components)
-                comp.SetActive(false);
-        }
-    }
+        ActivatePanels();
+    } //done
+
     public void StartGame()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -107,14 +111,14 @@ public class RoomController : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(1);
         PhotonNetwork.JoinLobby();
-    }
-
+    } //done
     public void BackOnClick()
     {
+        colorDropDown.SetActive(false);
         roomPanel.SetActive(false);
         lobbyPanel.SetActive(true);
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LeaveLobby();
         StartCoroutine(rejoinLobby());
-    }
+    } //done
 }

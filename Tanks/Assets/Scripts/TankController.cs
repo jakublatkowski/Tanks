@@ -12,6 +12,8 @@ public class TankController : MonoBehaviour
     [Header("Required Components")]
     public Transform bulletGenerator;
     public Barrel barrel;
+    [SerializeField]
+    private AudioClip explosionSoundEffect;
 
     [Header("Control Properties")]
     public float rotationSpeed = 1.0f;
@@ -54,12 +56,19 @@ public class TankController : MonoBehaviour
     private Vector3 baseCenterOfMass;
     private UIController ui;
 
+
     #endregion
 
     #region Properties
     public float HealthPoints => healthPoints;
 
     public bool IsBarrelRaising { get; set; }
+
+    private string tanksColor;
+    public string GetColor()
+    {
+        return tanksColor;
+    }
     #endregion
 
     #region UnityMethodsOverride
@@ -79,6 +88,7 @@ public class TankController : MonoBehaviour
         _isShootingActive = true;
         _isSpecialActive = false;
         _timeToActivateShooting = 0;
+        tanksColor = PlayerPrefs.GetString("Color");
     }
 
     // Update is called once per frame
@@ -151,6 +161,7 @@ public class TankController : MonoBehaviour
         }
     }
     #endregion
+
 
     private void Moving()
     {
@@ -225,6 +236,11 @@ public class TankController : MonoBehaviour
             StartCoroutine(GameController.instance.RespawnTank(this, attacker));
         }
     }
+    [PunRPC]
+    public void PlaySound()
+    {
+        AudioSource.PlayClipAtPoint(explosionSoundEffect, this.transform.position);
+    } // Done
     public void DestroyMyBullet(GameObject bullet)
     {
         PhotonNetwork.Destroy(bullet);
