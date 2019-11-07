@@ -35,5 +35,9 @@ MonoBehaviour:
   - AddDamage
   - PlaySound
   - AddPoints
+  - DeleteWaitAndRecreateSpecialForAllPlayers
+  - CreateSpecialForAllPlayers
+  - DeleteSpecialForAllPlayers
+  - SetSpecialActiveForAllPlayers
   DisableAutoOpenWizard: 1
   ShowSettings: 0
