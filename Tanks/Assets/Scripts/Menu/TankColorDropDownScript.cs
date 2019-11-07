@@ -17,7 +17,7 @@ public class TankColorDropDownScript : MonoBehaviourPun
     private GameObject Label;
 
     [SerializeField]
-    private List<string> ListOfItems = new List<string>();
+    public List<string> ListOfItems = new List<string>();
 
     private int _currentIndex;
     private int CurrentIndex
@@ -59,21 +59,21 @@ public class TankColorDropDownScript : MonoBehaviourPun
             if (PhotonNetwork.CurrentRoom.CustomProperties[j.ToString()].ToString() != "")
                 ListOfItems.Add(PhotonNetwork.CurrentRoom.CustomProperties[j.ToString()].ToString());
         }
-        
+
         GetComponentInParent<PhotonView>().RPC(nameof(this.AddToList), RpcTarget.All, Label.GetComponent<Text>().text, oldValue);
-
-
         Label.GetComponent<Text>().text = ListOfItems[CurrentIndex];
-        
         GetComponentInParent<PhotonView>().RPC(nameof(this.RemoveFromList), RpcTarget.All, CurrentIndex);
-        
+
+        PlayerPrefs.SetString("Color", Label.GetComponent<Text>().text);
+
+
         ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
         int i = 0;
-        for (; i< ListOfItems.Count; i++)
+        for (; i < ListOfItems.Count; i++)
         {
             table.Add(i.ToString(), ListOfItems[i]);
         }
-        for (; i< 8; i++)
+        for (; i < 8; i++)
         {
             table.Add(i.ToString(), "");
         }
@@ -86,7 +86,6 @@ public class TankColorDropDownScript : MonoBehaviourPun
     [PunRPC]
     private void RemoveFromList(int indeks)
     {
-        string component = ListOfItems[indeks];
         ListOfItems.RemoveAt(indeks);
     }
     [PunRPC]
@@ -94,5 +93,9 @@ public class TankColorDropDownScript : MonoBehaviourPun
     {
         if (component == "") return;
         ListOfItems.Insert(indeks, component);
+    }
+    private void OnDisable()
+    {
+        ListOfItems.Clear();
     }
 }

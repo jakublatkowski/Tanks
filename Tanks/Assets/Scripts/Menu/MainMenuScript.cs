@@ -30,17 +30,11 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
         lobbyConnectButton.SetActive(true);
-        
+        PlayerPrefs.SetString("Type", "Klient");
+
         if (PlayerPrefs.HasKey("NickName"))
         {
-            if (playerName.text == "")
-            {
-                PhotonNetwork.NickName = "Player " + Random.Range(0, 10000);
-            }
-            else
-            {
-                PhotonNetwork.NickName = PlayerPrefs.GetString("NickName");
-            }
+            PhotonNetwork.NickName = PlayerPrefs.GetString("NickName");
         }
         else
         {
@@ -83,10 +77,10 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     }
     public void CreateRoom()
     {
-        int roomSize = 8;
+        int roomSize = 9;
         string roomName = Random.Range(0, 99999).ToString();
         ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable()
-            { { "0", "Red" }, { "1", "Blue" }, { "2", "Green" }, { "3", "Yellow" }, { "4", "White" }, { "5", "Black" }, { "6", "Magenta" }, { "7", "Purple" } };
+            { { "0", "Red" }, { "1", "Blue" }, { "2", "Green" }, { "3", "Yellow" }, { "4", "White" }, { "5", "Black" }, { "6", "Magenta" }, { "7", "Purple" }, {"Mode", "Deathmatch" } };
         RoomOptions roomOpt = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize, CustomRoomProperties = table };
         PhotonNetwork.CreateRoom(roomName, roomOpt);
     }
