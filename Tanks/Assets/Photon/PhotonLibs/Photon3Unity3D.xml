@@ -457,7 +457,7 @@
         <member name="F:ExitGames.Client.Photon.PhotonPeer.SocketImplementationConfig">
              <summary>Defines which IPhotonSocket class to use per ConnectionProtocol.</summary>
              <remarks>
-             Several platforms have special Socket implementations and slightly different APIs.
+             Several platforms have specialPrefab Socket implementations and slightly different APIs.
              To accomodate this, switching the socket implementation for a network protocol was made available.
              By default, UDP and TCP have socket implementations assigned.
             

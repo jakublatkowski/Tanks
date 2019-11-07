@@ -1,14 +1,18 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 
 public class TankController : MonoBehaviour
 {
     #region Variables
+
     [Header("Required Components")]
+    public GameObject specialPrefab;
     public Transform bulletGenerator;
     public Barrel barrel;
     [SerializeField]
@@ -124,24 +128,40 @@ public class TankController : MonoBehaviour
         tankRb.centerOfMass = baseCenterOfMass + centerOfMassOffset;
     }
 
-    public void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider col)
     {
-        if (collision.gameObject.tag.Equals("Special"))
+        if (col.gameObject.tag.Equals("Special"))
         {
-            Destroy(collision.gameObject);
+            StartCoroutine(nameof(HandleSpecial), col.gameObject.name);
 
             ui.SetSpecialBarValue(1f);
 
             _isSpecialActive = true;
             timeSpecialActivated = Time.time;
         }
+    }
 
-        //if (collision.gameObject.tag.Equals("Bullet"))
-        //{
-        //    var bullet = collision.gameObject.GetComponent<Bullet>();
-        //    var attacker = collision.gameObject.GetPhotonView().Owner;
-        //    AddDamage(bullet.HitPoints, attacker);
-        //}
+    private IEnumerator HandleSpecial(string specialName)
+    {
+        var photonView = GetComponentInParent<PhotonView>();
+
+        photonView
+            .RPC(nameof(SetSpecialActiveForAllPlayers), RpcTarget.All, specialName, false);
+
+        yield return new WaitForSeconds(maxTimeSpecialActive);
+
+        photonView
+            .RPC(nameof(SetSpecialActiveForAllPlayers), RpcTarget.All,specialName, true);
+    }
+
+    [PunRPC]
+    private void SetSpecialActiveForAllPlayers(string specialName, bool isActive)
+    {
+        var special = Resources
+            .FindObjectsOfTypeAll<Special>().Single(spc => spc.name == specialName)
+            .gameObject;
+
+        special.SetActive(isActive);
     }
 
     public void OnCollisionStay(Collision collision)
@@ -160,7 +180,6 @@ public class TankController : MonoBehaviour
         }
     }
     #endregion
-
 
     private void Moving()
     {
@@ -257,7 +276,7 @@ public class TankController : MonoBehaviour
             ui.SetSpecialBarValue(0);
 
             var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
-            var index = Random.Range(0, spawnPoints.Length);
+            var index = UnityEngine.Random.Range(0, spawnPoints.Length);
 
             gameObject.transform.position = spawnPoints[index].transform.position;
             gameObject.transform.rotation = spawnPoints[index].transform.rotation;

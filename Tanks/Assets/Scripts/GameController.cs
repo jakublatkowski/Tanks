@@ -38,8 +38,8 @@ public class GameController : MonoBehaviour
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
         tank = players
-            .Single(player => player.GetPhotonView().IsMine)
-            .GetComponent<TankController>();
+            .FirstOrDefault(player => player.GetPhotonView().IsMine)
+            ?.GetComponent<TankController>();
     } // Done
     void Update()
     {
@@ -85,7 +85,8 @@ public class GameController : MonoBehaviour
 
         // TODO: Show sth
 
-        // TODO: Change damaged tank texture        
+        // TODO: Change damaged tank texture  
+        //damagedTank.gameObject.SetActive(false);
 
         // Wait for enable UI
         yield return new WaitForSeconds(5);
