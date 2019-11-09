@@ -141,29 +141,6 @@ public class TankController : MonoBehaviour
         }
     }
 
-    private IEnumerator HandleSpecial(string specialName)
-    {
-        var photonView = GetComponentInParent<PhotonView>();
-
-        photonView
-            .RPC(nameof(SetSpecialActiveForAllPlayers), RpcTarget.All, specialName, false);
-
-        yield return new WaitForSeconds(maxTimeSpecialActive);
-
-        photonView
-            .RPC(nameof(SetSpecialActiveForAllPlayers), RpcTarget.All,specialName, true);
-    }
-
-    [PunRPC]
-    private void SetSpecialActiveForAllPlayers(string specialName, bool isActive)
-    {
-        var special = Resources
-            .FindObjectsOfTypeAll<Special>().Single(spc => spc.name == specialName)
-            .gameObject;
-
-        special.SetActive(isActive);
-    }
-
     public void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag.Equals("Map"))
@@ -180,6 +157,29 @@ public class TankController : MonoBehaviour
         }
     }
     #endregion
+
+    private IEnumerator HandleSpecial(string specialName)
+    {
+        var photonView = GetComponentInParent<PhotonView>();
+
+        photonView
+            .RPC(nameof(SetSpecialActiveForAllPlayers), RpcTarget.All, specialName, false);
+
+        yield return new WaitForSeconds(maxTimeSpecialActive);
+
+        photonView
+            .RPC(nameof(SetSpecialActiveForAllPlayers), RpcTarget.All, specialName, true);
+    }
+
+    [PunRPC]
+    private void SetSpecialActiveForAllPlayers(string specialName, bool isActive)
+    {
+        var special = Resources
+            .FindObjectsOfTypeAll<Special>().Single(spc => spc.name == specialName)
+            .gameObject;
+
+        special.SetActive(isActive);
+    }
 
     private void Moving()
     {
@@ -231,7 +231,7 @@ public class TankController : MonoBehaviour
         {
             //tworzenie pocisku
             GameObject bullet = 
-                PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
+                PhotonNetwork.Instantiate(Path.Combine("Prefabs", "bulletPrefab"), bulletGenerator.position, bulletGenerator.rotation);
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
