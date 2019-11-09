@@ -54,7 +54,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639111515567824279}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0, y: -0.02684, z: 0.00047}
+  m_LocalPosition: {x: -0, y: -0.02536, z: 0.00047}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9201080865368230463}
@@ -165,11 +165,11 @@ GameObject:
   - component: {fileID: 9201080865368230461}
   - component: {fileID: 9201080865367427613}
   - component: {fileID: 9201080865366460637}
-  - component: {fileID: 8794903458050797155}
   - component: {fileID: 4241350622576180897}
   - component: {fileID: 1738106785360619917}
   - component: {fileID: 3397062703862121674}
   - component: {fileID: 1007021295783233489}
+  - component: {fileID: 8794903458050797155}
   m_Layer: 0
   m_Name: SuperTank
   m_TagString: Player
@@ -238,19 +238,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &8794903458050797155
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9201080865368397341}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.025200004, y: 0.010643918, z: 0.043305013}
-  m_Center: {x: -0.0000000011920929, y: -0.0036251626, z: 0.000682677}
 --- !u!54 &4241350622576180897
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -279,8 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44636e766ae83a842aaae4ad838fb76e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  specialPrefab: {fileID: 5657866618870894731, guid: e5760c1fb06977d4daa0f7ffc2c752fa,
-    type: 3}
+  specialPrefab: {fileID: 0}
   bulletGenerator: {fileID: 281878171381172133}
   barrel: {fileID: 4367415128093617349}
   explosionSoundEffect: {fileID: 8300000, guid: 8524588a69a4f3e40bb597b6221138f1,
@@ -334,6 +320,19 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
+--- !u!65 &8794903458050797155
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9201080865368397341}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.025200004, y: 0.010643918, z: 0.043305013}
+  m_Center: {x: -0.0000000011920929, y: -0.0036251626, z: 0.000682677}
 --- !u!1 &9201080865368397343
 GameObject:
   m_ObjectHideFlags: 0
