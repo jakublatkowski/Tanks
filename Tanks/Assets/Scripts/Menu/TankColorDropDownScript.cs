@@ -68,6 +68,7 @@ public class TankColorDropDownScript : MonoBehaviourPun
             if (item != null && item != "")
             {
                 Label.GetComponent<Text>().text = item;
+                PlayerPrefs.SetString("Color", item);
 
                 if (mode == "Deathmatch")
                 {
