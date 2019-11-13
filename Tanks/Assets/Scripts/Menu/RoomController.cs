@@ -138,7 +138,7 @@ public class RoomController : MonoBehaviourPunCallbacks
             if (PhotonNetwork.CurrentRoom.CustomProperties["Mode"].ToString() == "Deathmatch")
                 PhotonNetwork.LoadLevel("GameScene");
             else if (PhotonNetwork.CurrentRoom.CustomProperties["Mode"].ToString() == "TeamDeathmatch")
-                PhotonNetwork.LoadLevel("TeamGameScene");
+                PhotonNetwork.LoadLevel("TeamScene");
         }
     }
 
