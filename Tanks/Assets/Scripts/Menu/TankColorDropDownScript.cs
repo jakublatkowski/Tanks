@@ -15,24 +15,13 @@ public class TankColorDropDownScript : MonoBehaviourPun
 
     [SerializeField]
     private GameObject Label;
-
-    [SerializeField]
-    public List<string> ListOfItems = new List<string>();
-
+    
     private int _currentIndex;
     private int CurrentIndex
     {
         get { return _currentIndex; }
         set
         {
-            if (value > ListOfItems.Count)
-            {
-                value = 0;
-            }
-            if (value < 0)
-            {
-                value = ListOfItems.Count;
-            }
             int oldValue = _currentIndex;
             _currentIndex = value;
             OnCurrentIndexChanged(oldValue);
@@ -40,7 +29,6 @@ public class TankColorDropDownScript : MonoBehaviourPun
     }
     public void Click(GameObject button)
     {
-        if (ListOfItems.Count == 0) return;
         if (button == RightArrow)
         {
             CurrentIndex++;
@@ -53,49 +41,50 @@ public class TankColorDropDownScript : MonoBehaviourPun
 
     private void OnCurrentIndexChanged(int oldValue)
     {
-        ListOfItems.Clear();
-        for (int j = 0; j < 8; j++)
+        string currentItem = Label.GetComponent<Text>().text;
+        if (currentItem != "")
         {
-            if (PhotonNetwork.CurrentRoom.CustomProperties[j.ToString()].ToString() != "")
-                ListOfItems.Add(PhotonNetwork.CurrentRoom.CustomProperties[j.ToString()].ToString());
+            ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
+            for (int i = 0; i < 8; i++)
+            {
+                if (i == oldValue)
+                    table.Add(i.ToString(), currentItem);
+                else
+                    table.Add(i.ToString(), PhotonNetwork.CurrentRoom.CustomProperties[i.ToString()].ToString());
+            }
+            PhotonNetwork.CurrentRoom.SetCustomProperties(table);
         }
-
-        GetComponentInParent<PhotonView>().RPC(nameof(this.AddToList), RpcTarget.All, Label.GetComponent<Text>().text, oldValue);
-        Label.GetComponent<Text>().text = ListOfItems[CurrentIndex];
-        GetComponentInParent<PhotonView>().RPC(nameof(this.RemoveFromList), RpcTarget.All, CurrentIndex);
-
-        PlayerPrefs.SetString("Color", Label.GetComponent<Text>().text);
-
-
-        ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
-        int i = 0;
-        for (; i < ListOfItems.Count; i++)
+        bool foundItem = false;
+        while (!foundItem)
         {
-            table.Add(i.ToString(), ListOfItems[i]);
+            string item = PhotonNetwork.CurrentRoom.CustomProperties[CurrentIndex.ToString()]?.ToString();
+            if (item != null && item != "")
+            {
+                foundItem = true;
+                Label.GetComponent<Text>().text = item;
+
+                ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
+                for (int i = 0; i < 8; i++)
+                {
+                    if (i == CurrentIndex)
+                        table.Add(i.ToString(), "");
+                    else
+                        table.Add(i.ToString(), PhotonNetwork.CurrentRoom.CustomProperties[i.ToString()].ToString());
+                }
+                PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+            }
+            else
+            {
+                if (_currentIndex > 7) _currentIndex = 0;
+                else if (_currentIndex < 0) _currentIndex = 7;
+                else if ((oldValue - CurrentIndex) != 0) _currentIndex += (CurrentIndex - oldValue);
+                else
+                    _currentIndex++; 
+            }
         }
-        for (; i < 8; i++)
-        {
-            table.Add(i.ToString(), "");
-        }
-        PhotonNetwork.CurrentRoom.SetCustomProperties(table);
     }
     private void Start()
     {
         CurrentIndex = 0;
-    }
-    [PunRPC]
-    private void RemoveFromList(int indeks)
-    {
-        ListOfItems.RemoveAt(indeks);
-    }
-    [PunRPC]
-    private void AddToList(string component, int indeks)
-    {
-        if (component == "") return;
-        ListOfItems.Insert(indeks, component);
-    }
-    private void OnDisable()
-    {
-        ListOfItems.Clear();
     }
 }

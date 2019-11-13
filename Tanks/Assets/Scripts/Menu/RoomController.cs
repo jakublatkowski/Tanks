@@ -78,7 +78,35 @@ public class RoomController : MonoBehaviourPunCallbacks
         string mode = gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text;
 
         PlayerPrefs.SetString("Mode", mode);
-        PhotonNetwork.CurrentRoom.CustomProperties["Mode"] = mode;
+
+        if (mode == "Deathmatch")
+        {
+            ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable()
+            { { "0", "Red" },
+            { "1", "Blue" },
+            { "2", "Green" },
+            { "3", "Yellow" },
+            { "4", "White" },
+            { "5", "Black" },
+            { "6", "Magenta" },
+            { "7", "Purple" },
+            { "Mode", "Deathmatch" } };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+        }
+        else
+        {
+            ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable()
+            { { "0", "Red" },
+            { "1", "Blue" },
+            { "2", "" },
+            { "3", "" },
+            { "4", "" },
+            { "5", "" },
+            { "6", "" },
+            { "7", "" },
+            { "Mode", "TeamDeathmatch" } };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+        }
     } //done
     public void OnGameTimeChanged()
     {
