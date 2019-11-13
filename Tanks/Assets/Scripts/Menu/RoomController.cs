@@ -65,8 +65,8 @@ public class RoomController : MonoBehaviourPunCallbacks
     } //done
     public override void OnJoinedRoom()
     {
-        colorDropDown.SetActive(true);
         roomPanel.SetActive(true);
+        colorDropDown.GetComponent<TankColorDropDownScript>().Init();
         lobbyPanel.SetActive(false);
         roomName.text = PhotonNetwork.CurrentRoom.Name;
         ActivatePanels();
@@ -92,6 +92,8 @@ public class RoomController : MonoBehaviourPunCallbacks
             { "7", "Purple" },
             { "Mode", "Deathmatch" } };
             PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+            for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+            colorDropDown.GetPhotonView().RPC(nameof(TankColorDropDownScript.ChangedModeChangeColor), PhotonNetwork.CurrentRoom.Players[i + 1], i);
         }
         else
         {
@@ -106,6 +108,7 @@ public class RoomController : MonoBehaviourPunCallbacks
             { "7", "" },
             { "Mode", "TeamDeathmatch" } };
             PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+            colorDropDown.GetPhotonView().RPC(nameof(TankColorDropDownScript.ChangedModeChangeColor), RpcTarget.All, 0);
         }
     } //done
     public void OnGameTimeChanged()
@@ -131,7 +134,11 @@ public class RoomController : MonoBehaviourPunCallbacks
         {
             PlayerPrefs.SetString("Type", "Serwer");
             PhotonNetwork.CurrentRoom.IsOpen = true; // tylko dla debuggingu
-            PhotonNetwork.LoadLevel("GameScene");
+
+            if (PhotonNetwork.CurrentRoom.CustomProperties["Mode"].ToString() == "Deathmatch")
+                PhotonNetwork.LoadLevel("GameScene");
+            else if (PhotonNetwork.CurrentRoom.CustomProperties["Mode"].ToString() == "TeamDeathmatch")
+                PhotonNetwork.LoadLevel("TeamGameScene");
         }
     }
 
@@ -142,7 +149,6 @@ public class RoomController : MonoBehaviourPunCallbacks
     } //done
     public void BackOnClick()
     {
-        colorDropDown.SetActive(false);
         roomPanel.SetActive(false);
         lobbyPanel.SetActive(true);
         PhotonNetwork.LeaveRoom();

@@ -16,6 +16,7 @@ public class TankColorDropDownScript : MonoBehaviourPun
     [SerializeField]
     private GameObject Label;
     
+    private int direction = 1;
     private int _currentIndex;
     private int CurrentIndex
     {
@@ -32,59 +33,84 @@ public class TankColorDropDownScript : MonoBehaviourPun
         if (button == RightArrow)
         {
             CurrentIndex++;
+            direction = 1;
         }
         else if (button == LeftArrow)
         {
             CurrentIndex--;
+            direction = -1;
         }
     }
 
     private void OnCurrentIndexChanged(int oldValue)
     {
-        string currentItem = Label.GetComponent<Text>().text;
-        if (currentItem != "")
+        string mode = PhotonNetwork.CurrentRoom.CustomProperties["Mode"].ToString();
+        if (mode == "Deathmatch")
         {
-            ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
-            for (int i = 0; i < 8; i++)
+            string currentItem = Label.GetComponent<Text>().text;
+            if (currentItem != "")
             {
-                if (i == oldValue)
-                    table.Add(i.ToString(), currentItem);
-                else
-                    table.Add(i.ToString(), PhotonNetwork.CurrentRoom.CustomProperties[i.ToString()].ToString());
-            }
-            PhotonNetwork.CurrentRoom.SetCustomProperties(table);
-        }
-        bool foundItem = false;
-        while (!foundItem)
-        {
-            string item = PhotonNetwork.CurrentRoom.CustomProperties[CurrentIndex.ToString()]?.ToString();
-            if (item != null && item != "")
-            {
-                foundItem = true;
-                Label.GetComponent<Text>().text = item;
-
                 ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
                 for (int i = 0; i < 8; i++)
                 {
-                    if (i == CurrentIndex)
-                        table.Add(i.ToString(), "");
+                    if (i == oldValue)
+                        table.Add(i.ToString(), currentItem);
                     else
                         table.Add(i.ToString(), PhotonNetwork.CurrentRoom.CustomProperties[i.ToString()].ToString());
                 }
                 PhotonNetwork.CurrentRoom.SetCustomProperties(table);
             }
+        }
+
+        while (true)
+        {
+            string item = PhotonNetwork.CurrentRoom.CustomProperties[CurrentIndex.ToString()]?.ToString();
+            if (item != null && item != "")
+            {
+                Label.GetComponent<Text>().text = item;
+
+                if (mode == "Deathmatch")
+                {
+                    ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (i == CurrentIndex)
+                            table.Add(i.ToString(), "");
+                        else
+                            table.Add(i.ToString(), PhotonNetwork.CurrentRoom.CustomProperties[i.ToString()].ToString());
+                    }
+                    PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+                }
+                break;
+            }
             else
             {
                 if (_currentIndex > 7) _currentIndex = 0;
-                else if (_currentIndex < 0) _currentIndex = 7;
-                else if ((oldValue - CurrentIndex) != 0) _currentIndex += (CurrentIndex - oldValue);
+                else if (_currentIndex < 0)
+                {
+                    if (mode == "TeamDeathmatch")
+                        _currentIndex = 1;
+                    else if (mode == "Deathmatch")
+                        _currentIndex = 7;
+                }
                 else
-                    _currentIndex++; 
+                    _currentIndex += direction; 
             }
         }
     }
     private void Start()
     {
+        Init();
+    }
+    public void Init()
+    {
+        Label.GetComponent<Text>().text = "";
         CurrentIndex = 0;
+    }
+
+    [PunRPC]
+    public void ChangedModeChangeColor(int indeks)
+    {
+        CurrentIndex = indeks;
     }
 }

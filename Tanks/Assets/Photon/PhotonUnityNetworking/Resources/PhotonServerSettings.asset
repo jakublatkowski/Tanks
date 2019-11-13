@@ -36,5 +36,6 @@ MonoBehaviour:
   - PlaySound
   - AddPoints
   - SetSpecialActiveForAllPlayers
+  - ChangedModeChangeColor
   DisableAutoOpenWizard: 1
   ShowSettings: 0
