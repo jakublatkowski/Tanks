@@ -273,6 +273,7 @@ MonoBehaviour:
   - {fileID: 1429597334}
   - {fileID: 1851879364}
   colorDropDown: {fileID: 7102988}
+  colorDropDownLabel: {fileID: 1380486509}
 --- !u!4 &18674285
 Transform:
   m_ObjectHideFlags: 0

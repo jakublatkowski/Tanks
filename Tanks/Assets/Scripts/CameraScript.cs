@@ -29,6 +29,7 @@ public class CameraScript : MonoBehaviour
     void LateUpdate()
     {
         if (WatchedTank == null) return;
+
         var tankControllerTransform = WatchedTank.transform;
 
         SetUpCameraPosition(tankControllerTransform);
