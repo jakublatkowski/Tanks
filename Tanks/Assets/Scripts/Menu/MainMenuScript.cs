@@ -29,9 +29,9 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
-        //if (SystemInfo.deviceType != DeviceType.Handheld)
-        //    table.Add("isHandHeld", "false");
-        //else
+        if (SystemInfo.deviceType != DeviceType.Handheld)
+            table.Add("isHandHeld", "false");
+        else
             table.Add("isHandHeld", "true");
         PhotonNetwork.LocalPlayer.SetCustomProperties(table);
 
@@ -86,8 +86,8 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         int roomSize = 8;
-        //if (SystemInfo.deviceType != DeviceType.Handheld)
-        //    roomSize++;
+        if (SystemInfo.deviceType != DeviceType.Handheld)
+            roomSize++;
         string roomName = Random.Range(0, 99999).ToString();
         ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable()
             { { "0", "Red" },
