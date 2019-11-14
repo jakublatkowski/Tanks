@@ -70,9 +70,6 @@ public class TankColorDropDownScript : MonoBehaviourPun
                 Label.GetComponent<Text>().text = item;
                 PlayerPrefs.SetString("Color", item);
 
-                //xxxxxxx
-                PreviewTankScript.ChangeTankColor(GetColorFromName(item));
-
                 if (mode == "Deathmatch")
                 {
                     ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();

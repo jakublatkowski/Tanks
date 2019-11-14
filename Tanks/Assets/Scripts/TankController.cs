@@ -92,8 +92,10 @@ public class TankController : MonoBehaviour
         _isSpecialActive = false;
         _timeToActivateShooting = 0;
         tanksColor = PlayerPrefs.GetString("Color");
-        SetTankColor(gameObject, TankColorDropDownScript.GetColorFromName(tanksColor));
-
+        if (gameObject.GetPhotonView().IsMine)
+        {
+            GetComponentInParent<PhotonView>().RPC(nameof(SetTankColor), RpcTarget.AllBufferedViaServer, tanksColor);
+        }
     }
 
     // Update is called once per frame
@@ -285,9 +287,11 @@ public class TankController : MonoBehaviour
         }
     }
 
-    public static void SetTankColor(GameObject obj, Color color)
+    [PunRPC]
+    public void SetTankColor(string colorStr)
     {
-        Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+        Color colorFromStr = TankColorDropDownScript.GetColorFromName(colorStr);
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
         foreach (Renderer renderer in renderers)
         {
             Material[] materials = renderer.GetComponent<Renderer>().materials;
@@ -295,7 +299,7 @@ public class TankController : MonoBehaviour
             {
                 if (material.name.Contains("Primary"))
                 {
-                    material.SetColor("_Color", color);
+                    material.SetColor("_Color", colorFromStr);
                 }
             }
         }
