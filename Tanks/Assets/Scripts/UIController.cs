@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Photon.Pun;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
@@ -10,6 +12,9 @@ public class UIController : MonoBehaviour
     [Tooltip("UI Slider to display Player's Health")]
     [SerializeField]
     private Slider playerHealthSlider;
+
+    [Header("Time Panel")]
+    public GameObject timePanel;
 
     [Header("Colors-Points Panels")]
     public GameObject redPanel;
@@ -29,6 +34,7 @@ public class UIController : MonoBehaviour
     public GameObject shootingLagPanel;
 
     private PointsController pointsController;
+    private float maxTimeSeconds;
 
     public void SetHealthBarValue(float val)
     {
@@ -79,7 +85,7 @@ public class UIController : MonoBehaviour
         shootingLagPanel.SetActive(true);
     }
 
-    private void SetPoints()
+    private void ShowPoints()
     {
         redPanel.GetComponentInChildren<Text>().text = pointsController.RedPoints.ToString();
         bluePanel.GetComponentInChildren<Text>().text = pointsController.BluePoints.ToString();
@@ -94,10 +100,47 @@ public class UIController : MonoBehaviour
     void Start()
     {
         pointsController = GameObject.Find(nameof(PointsController)).GetComponent<PointsController>();
+        var minutes = PhotonNetwork.CurrentRoom.CustomProperties["Time"].ToString();
+
+        switch (minutes)
+        {
+            case "1 min":
+            {
+                maxTimeSeconds = 60;
+                break;
+            }
+
+            case "2 min":
+            {
+                maxTimeSeconds = 2 * 60;
+                break;
+            }
+
+            case "5 min":
+            {
+                maxTimeSeconds = 5 * 60;
+                break;
+            }
+
+            case "10 min":
+            {
+                maxTimeSeconds = 10 * 60;
+                break;
+            }
+
+            default:
+            {
+                throw new NotSupportedException("Not supported time range");
+            }
+        }
     }
 
-    public void FixedUpdate()
+    public void Update()
     {
-        SetPoints();
+        ShowPoints();
+        var seconds = (int)(maxTimeSeconds -= Time.deltaTime);
+        var minutes = seconds / 60;
+        seconds -= minutes * 60;
+        timePanel.GetComponentInChildren<Text>().text = seconds < 10 ? $"{minutes}:0{seconds}" : $"{minutes}:{seconds}";
     }
 }
