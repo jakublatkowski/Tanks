@@ -70,6 +70,9 @@ public class TankColorDropDownScript : MonoBehaviourPun
                 Label.GetComponent<Text>().text = item;
                 PlayerPrefs.SetString("Color", item);
 
+                //xxxxxxx
+                PreviewTankScript.ChangeTankColor(GetColorFromName(item));
+
                 if (mode == "Deathmatch")
                 {
                     ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
@@ -113,5 +116,30 @@ public class TankColorDropDownScript : MonoBehaviourPun
     public void ChangedModeChangeColor(int indeks)
     {
         CurrentIndex = indeks;
+    }
+
+    public static Color GetColorFromName(string name)
+    {
+        switch (name)
+        {
+            case "Red":
+                return new Color(0.8f, 0.0f, 0.0f);
+            case "Blue":
+                return new Color(0.0f, 0.0f, 0.8f);
+            case "Green":
+                return new Color(0.0f, 0.8f, 0.0f);
+            case "Yellow":
+                return new Color(0.8f, 0.8f, 0.0f);
+            case "White":
+                return new Color(0.8f, 0.8f, 0.8f);
+            case "Black":
+                return new Color(0.0f, 0.0f, 0.0f);
+            case "Magenta":
+                return new Color(0.8f, 0.0f, 0.8f);
+            case "Purple":
+                return new Color(0.0f, 0.8f, 0.8f);
+            default:
+                return new Color(0.0f, 0.0f, 0.0f);
+        }
     }
 }

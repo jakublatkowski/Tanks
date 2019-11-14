@@ -55,16 +55,16 @@ public class RoomController : MonoBehaviourPunCallbacks
             foreach (GameObject comp in components)
                 comp.SetActive(false);
         }
-        if (SystemInfo.deviceType != DeviceType.Handheld)
-        {
-            colorDropDown.SetActive(false);
-            colorDropDownLabel.SetActive(false);
-        }
-        else
-        {
+        //if (SystemInfo.deviceType != DeviceType.Handheld)
+        //{
+        //    colorDropDown.SetActive(false);
+        //    colorDropDownLabel.SetActive(false);
+        //}
+        //else
+        //{
             colorDropDown.SetActive(true);
             colorDropDownLabel.SetActive(true);
-        }
+        //}
 
     } //done
     void ListPlayers()
