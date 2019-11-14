@@ -39,6 +39,7 @@ public class StartGameScript : MonoBehaviour
         foreach (var specialPoint in specialPoints)
         {
             var createdSpecial = Instantiate(specialPrefab, specialPoint.transform.position, specialPoint.transform.rotation);
+            createdSpecial.GetComponent<SphereCollider>().isTrigger = true;
             createdSpecial.name += i++;
         }
     }
