@@ -11,15 +11,21 @@ public class StartGameScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        var canvas = GameObject.Find("Canvas");
+        var computerCanvas = GameObject.Find("ComputerCanvas");
+
         if (SystemInfo.deviceType == DeviceType.Handheld)
+        {
+            computerCanvas.SetActive(false);
             CreatePlayer();
+        }
         else
         {
-            var canvas = GameObject.Find("Canvas");
             canvas.SetActive(false);
+            Camera.main.GetComponent<CameraScript>().SetUpComputerCamera();
         }
-        CreateSpecials();
 
+        CreateSpecials();
     }
 
     // Update is called once per frame

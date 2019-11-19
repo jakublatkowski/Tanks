@@ -239,7 +239,7 @@ public class TankController : MonoBehaviour
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.33f);
         }
     }
 

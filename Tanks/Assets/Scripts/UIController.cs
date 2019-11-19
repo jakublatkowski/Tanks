@@ -13,6 +13,9 @@ public class UIController : MonoBehaviour
     [SerializeField]
     private Slider playerHealthSlider;
 
+    [Header("GameOver")]
+    public GameObject gameOverPanel;
+
     [Header("Time Panel")]
     public GameObject timePanel;
 
@@ -135,6 +138,13 @@ public class UIController : MonoBehaviour
         }
     }
 
+
+    public void GameOver()
+    {
+        timePanel.SetActive(false);
+        gameOverPanel.SetActive(true);
+    }
+
     public void Update()
     {
         ShowPoints();
@@ -142,5 +152,7 @@ public class UIController : MonoBehaviour
         var minutes = seconds / 60;
         seconds -= minutes * 60;
         timePanel.GetComponentInChildren<Text>().text = seconds < 10 ? $"{minutes}:0{seconds}" : $"{minutes}:{seconds}";
+
+        if(minutes == 0 && seconds == 0) GameOver();
     }
 }
