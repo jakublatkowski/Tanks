@@ -19,6 +19,7 @@ public class StartGameScript : MonoBehaviour
             canvas.SetActive(false);
         }
         CreateSpecials();
+
     }
 
     // Update is called once per frame
