@@ -26,7 +26,7 @@ public class TankController : MonoBehaviour
 
     [Header("Gravity Settings")]
     public float gravityForce = 10f;
-    public Vector3 centerOfMassOffset = new Vector3(0,-0.5f,0);
+    public Vector3 centerOfMassOffset = new Vector3(0, -0.5f, 0);
 
     [Header("Camera Properties")]
     public float cameraDistance = 10f;
@@ -92,6 +92,10 @@ public class TankController : MonoBehaviour
         _isSpecialActive = false;
         _timeToActivateShooting = 0;
         tanksColor = PlayerPrefs.GetString("Color");
+        if (gameObject.GetPhotonView().IsMine)
+        {
+            GetComponentInParent<PhotonView>().RPC(nameof(SetTankColor), RpcTarget.AllBufferedViaServer, tanksColor);
+        }
     }
 
     // Update is called once per frame
@@ -104,7 +108,7 @@ public class TankController : MonoBehaviour
 
         MoveBarrel();
 
-        if(!_isShootingActive && _timeToActivateShooting <= Time.time)
+        if (!_isShootingActive && _timeToActivateShooting <= Time.time)
         {
             _isShootingActive = true;
         }
@@ -230,7 +234,7 @@ public class TankController : MonoBehaviour
         for (var i = 0; i < bulletsToSpawn; i++)
         {
             //tworzenie pocisku
-            GameObject bullet = 
+            GameObject bullet =
                 PhotonNetwork.Instantiate(Path.Combine("Prefabs", "bulletPrefab"), bulletGenerator.position, bulletGenerator.rotation);
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
@@ -280,6 +284,24 @@ public class TankController : MonoBehaviour
 
             gameObject.transform.position = spawnPoints[index].transform.position;
             gameObject.transform.rotation = spawnPoints[index].transform.rotation;
+        }
+    }
+
+    [PunRPC]
+    public void SetTankColor(string colorStr)
+    {
+        Color colorFromStr = TankColorDropDownScript.GetColorFromName(colorStr);
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            Material[] materials = renderer.GetComponent<Renderer>().materials;
+            foreach (Material material in materials)
+            {
+                if (material.name.Contains("Primary"))
+                {
+                    material.SetColor("_Color", colorFromStr);
+                }
+            }
         }
     }
 }
