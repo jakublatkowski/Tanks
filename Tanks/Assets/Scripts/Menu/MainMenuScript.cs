@@ -31,7 +31,7 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
         ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
         if (SystemInfo.deviceType != DeviceType.Handheld)
             table.Add("isHandHeld", "false");
-        else
+       else
             table.Add("isHandHeld", "true");
         PhotonNetwork.LocalPlayer.SetCustomProperties(table);
 

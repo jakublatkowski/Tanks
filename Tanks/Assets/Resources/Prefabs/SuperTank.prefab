@@ -281,7 +281,7 @@ MonoBehaviour:
   cameraPositionYRatio: 0.237
   cameraPositionZRatio: 1
   healthPoints: 100
-  maxSpecialBulletCount: 10
+  maxSpecialBulletCount: 3
   maxTimeSpecialActive: 50
 --- !u!114 &3397062703862121674
 MonoBehaviour:
