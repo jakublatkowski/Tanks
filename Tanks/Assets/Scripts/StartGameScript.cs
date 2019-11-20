@@ -9,19 +9,19 @@ public class StartGameScript : MonoBehaviour
     public GameObject tank;
     public GameObject specialPrefab;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         var canvas = GameObject.Find("Canvas");
         var computerCanvas = GameObject.Find("ComputerCanvas");
 
         if (SystemInfo.deviceType == DeviceType.Handheld)
         {
-            computerCanvas.SetActive(false);
+            Destroy(computerCanvas.gameObject);
             CreatePlayer();
         }
         else
         {
-            canvas.SetActive(false);
+            Destroy(canvas.gameObject);
             Camera.main.GetComponent<CameraScript>().SetUpComputerCamera();
         }
 

@@ -73,6 +73,6 @@ public class CameraScript : MonoBehaviour
 
         var comera = gameObject.GetComponent<Camera>();
         comera.orthographic = true;
-        comera.orthographicSize = 252;
+        comera.orthographicSize = 270;
     }
 }
