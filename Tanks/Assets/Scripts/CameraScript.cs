@@ -29,7 +29,11 @@ public class CameraScript : MonoBehaviour
 
     void LateUpdate()
     {
-        if (computer) return;
+        if (computer)
+        {
+            transform.LookAt(new Vector3(0, 0));
+            transform.RotateAround(Vector3.zero, Vector3.up, 10 * Time.deltaTime);
+        };
 
         if (WatchedTank == null) return;
 
@@ -68,11 +72,11 @@ public class CameraScript : MonoBehaviour
     public void SetUpComputerCamera()
     {
         computer = true;
-        gameObject.transform.position = new Vector3(0,100,-8);
-        gameObject.transform.rotation = new Quaternion(.7f,0,0,.7f);
+        ////gameObject.transform.position = new Vector3(0,100,-8);
+        ////gameObject.transform.rotation = new Quaternion(.7f,0,0,.7f);
 
-        var comera = gameObject.GetComponent<Camera>();
-        comera.orthographic = true;
-        comera.orthographicSize = 270;
+        //var comera = gameObject.GetComponent<Camera>();
+        ////comera.orthographic = true;
+        ////comera.orthographicSize = 270;
     }
 }
