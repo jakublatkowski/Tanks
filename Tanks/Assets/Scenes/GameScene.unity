@@ -8921,7 +8921,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Shot
+  m_Text: Shoot
 --- !u!224 &8438167792957181246
 RectTransform:
   m_ObjectHideFlags: 0
