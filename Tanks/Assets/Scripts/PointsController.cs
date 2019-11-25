@@ -11,7 +11,7 @@ public class PointsController : MonoBehaviour
     public int WhitePoints { get; private set; }
     public int BlackPoints { get; private set; }
     public int MagentaPoints { get; private set; }
-    public int PurplePoints { get; private set; }
+    public int CyanPoints { get; private set; }
 
     [PunRPC]
     public void AddPoints(string color, int points)
@@ -46,8 +46,8 @@ public class PointsController : MonoBehaviour
                 MagentaPoints += points;
                 break;
 
-            case Color.Purple:
-                PurplePoints += points;
+            case Color.Cyan:
+                CyanPoints += points;
                 break;
 
             default:

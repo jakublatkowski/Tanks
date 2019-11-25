@@ -133,7 +133,7 @@ public class TankColorDropDownScript : MonoBehaviourPun
                 return new Color(0.0f, 0.0f, 0.0f);
             case "Magenta":
                 return new Color(0.8f, 0.0f, 0.8f);
-            case "Purple":
+            case "Cyan":
                 return new Color(0.0f, 0.8f, 0.8f);
             default:
                 return new Color(0.0f, 0.0f, 0.0f);
