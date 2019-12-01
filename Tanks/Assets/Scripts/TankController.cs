@@ -1,14 +1,18 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 
 public class TankController : MonoBehaviour
 {
     #region Variables
+
     [Header("Required Components")]
+    public GameObject specialPrefab;
     public Transform bulletGenerator;
     public Barrel barrel;
     [SerializeField]
@@ -22,7 +26,7 @@ public class TankController : MonoBehaviour
 
     [Header("Gravity Settings")]
     public float gravityForce = 10f;
-    public Vector3 centerOfMassOffset = new Vector3(0,-0.5f,0);
+    public Vector3 centerOfMassOffset = new Vector3(0, -0.5f, 0);
 
     [Header("Camera Properties")]
     public float cameraDistance = 10f;
@@ -88,6 +92,10 @@ public class TankController : MonoBehaviour
         _isSpecialActive = false;
         _timeToActivateShooting = 0;
         tanksColor = PlayerPrefs.GetString("Color");
+        if (gameObject.GetPhotonView().IsMine)
+        {
+            GetComponentInParent<PhotonView>().RPC(nameof(SetTankColor), RpcTarget.AllBufferedViaServer, tanksColor);
+        }
     }
 
     // Update is called once per frame
@@ -100,7 +108,7 @@ public class TankController : MonoBehaviour
 
         MoveBarrel();
 
-        if(!_isShootingActive && _timeToActivateShooting <= Time.time)
+        if (!_isShootingActive && _timeToActivateShooting <= Time.time)
         {
             _isShootingActive = true;
         }
@@ -124,24 +132,17 @@ public class TankController : MonoBehaviour
         tankRb.centerOfMass = baseCenterOfMass + centerOfMassOffset;
     }
 
-    public void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider col)
     {
-        if (collision.gameObject.tag.Equals("Special"))
+        if (col.gameObject.tag.Equals("Special"))
         {
-            Destroy(collision.gameObject);
+            StartCoroutine(nameof(HandleSpecial), col.gameObject.name);
 
             ui.SetSpecialBarValue(1f);
 
             _isSpecialActive = true;
             timeSpecialActivated = Time.time;
         }
-
-        //if (collision.gameObject.tag.Equals("Bullet"))
-        //{
-        //    var bullet = collision.gameObject.GetComponent<Bullet>();
-        //    var attacker = collision.gameObject.GetPhotonView().Owner;
-        //    AddDamage(bullet.HitPoints, attacker);
-        //}
     }
 
     public void OnCollisionStay(Collision collision)
@@ -161,6 +162,28 @@ public class TankController : MonoBehaviour
     }
     #endregion
 
+    private IEnumerator HandleSpecial(string specialName)
+    {
+        var photonView = GetComponentInParent<PhotonView>();
+
+        photonView
+            .RPC(nameof(SetSpecialActiveForAllPlayers), RpcTarget.All, specialName, false);
+
+        yield return new WaitForSeconds(maxTimeSpecialActive);
+
+        photonView
+            .RPC(nameof(SetSpecialActiveForAllPlayers), RpcTarget.All, specialName, true);
+    }
+
+    [PunRPC]
+    private void SetSpecialActiveForAllPlayers(string specialName, bool isActive)
+    {
+        var special = Resources
+            .FindObjectsOfTypeAll<Special>().Single(spc => spc.name == specialName)
+            .gameObject;
+
+        special.SetActive(isActive);
+    }
 
     private void Moving()
     {
@@ -211,12 +234,12 @@ public class TankController : MonoBehaviour
         for (var i = 0; i < bulletsToSpawn; i++)
         {
             //tworzenie pocisku
-            GameObject bullet = 
-                PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Bullet"), bulletGenerator.position, bulletGenerator.rotation);
+            GameObject bullet =
+                PhotonNetwork.Instantiate(Path.Combine("Prefabs", "bulletPrefab"), bulletGenerator.position, bulletGenerator.rotation);
             bullet.GetComponent<Rigidbody>().AddForce(shotForce * bulletGenerator.forward, ForceMode.Impulse);
             tankRb.AddForce(-shotForce * bulletGenerator.forward, ForceMode.Impulse);
 
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.33f);
         }
     }
 
@@ -257,10 +280,28 @@ public class TankController : MonoBehaviour
             ui.SetSpecialBarValue(0);
 
             var spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
-            var index = Random.Range(0, spawnPoints.Length);
+            var index = UnityEngine.Random.Range(0, spawnPoints.Length);
 
             gameObject.transform.position = spawnPoints[index].transform.position;
             gameObject.transform.rotation = spawnPoints[index].transform.rotation;
+        }
+    }
+
+    [PunRPC]
+    public void SetTankColor(string colorStr)
+    {
+        Color colorFromStr = TankColorDropDownScript.GetColorFromName(colorStr);
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            Material[] materials = renderer.GetComponent<Renderer>().materials;
+            foreach (Material material in materials)
+            {
+                if (material.name.Contains("Primary"))
+                {
+                    material.SetColor("_Color", colorFromStr);
+                }
+            }
         }
     }
 }

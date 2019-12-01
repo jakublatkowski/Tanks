@@ -18,12 +18,16 @@ public class Bullet : MonoBehaviour
     public float HitPoints { get { return hitPoints; } }
     public int colorPoints = 5;
 
+    public float centerOffMassOffset;
+
     private void Start()
     {
         pointsController = GameObject.Find(nameof(PointsController)).GetComponent<PointsController>();
 
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+        m_Rigidbody.centerOfMass += Vector3.forward * centerOffMassOffset;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,6 +40,9 @@ public class Bullet : MonoBehaviour
         //if collison happened with another player then add damage
         if (collision.gameObject.tag.Equals("Player"))
         {
+            //if hits owner, than do nothing
+            if (collision.gameObject.GetPhotonView().Owner == bulletsOwner) return;
+
             // Add points
             HandlePoints();
 

@@ -33,6 +33,8 @@ public class RoomController : MonoBehaviourPunCallbacks
 
     [SerializeField]
     private GameObject colorDropDown;
+    [SerializeField]
+    private GameObject colorDropDownLabel;
 
     void ClearPlayerListings()
     {
@@ -53,11 +55,23 @@ public class RoomController : MonoBehaviourPunCallbacks
             foreach (GameObject comp in components)
                 comp.SetActive(false);
         }
+        if (SystemInfo.deviceType != DeviceType.Handheld)
+        {
+            colorDropDown.SetActive(false);
+            colorDropDownLabel.SetActive(false);
+        }
+        else
+        {
+            colorDropDown.SetActive(true);
+            colorDropDownLabel.SetActive(true);
+        }
+
     } //done
     void ListPlayers()
     {
         foreach (Player player in PhotonNetwork.PlayerList)
         {
+            if (player.CustomProperties["isHandHeld"].ToString() == "false") continue;
             GameObject tmpListing = Instantiate(playerListingPrefab, playersContainer);
             Text tmpText = tmpListing.transform.GetChild(0).GetComponent<Text>();
             tmpText.text = player.NickName;
@@ -65,8 +79,8 @@ public class RoomController : MonoBehaviourPunCallbacks
     } //done
     public override void OnJoinedRoom()
     {
-        colorDropDown.SetActive(true);
         roomPanel.SetActive(true);
+
         lobbyPanel.SetActive(false);
         roomName.text = PhotonNetwork.CurrentRoom.Name;
         ActivatePanels();
@@ -78,11 +92,47 @@ public class RoomController : MonoBehaviourPunCallbacks
         string mode = gameMode.GetComponent<Dropdown>().options[gameMode.GetComponent<Dropdown>().value].text;
 
         PlayerPrefs.SetString("Mode", mode);
-        PhotonNetwork.CurrentRoom.CustomProperties["Mode"] = mode;
+
+        if (mode == "Deathmatch")
+        {
+            ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable()
+            { { "0", "Red" },
+            { "1", "Blue" },
+            { "2", "Green" },
+            { "3", "Yellow" },
+            { "4", "White" },
+            { "5", "Black" },
+            { "6", "Magenta" },
+            { "7", "Purple" },
+            { "Mode", "Deathmatch" } };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+            for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+            colorDropDown.GetPhotonView().RPC(nameof(TankColorDropDownScript.ChangedModeChangeColor), PhotonNetwork.CurrentRoom.Players[i + 1], i);
+        }
+        else
+        {
+            ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable()
+            { { "0", "Red" },
+            { "1", "Blue" },
+            { "2", "" },
+            { "3", "" },
+            { "4", "" },
+            { "5", "" },
+            { "6", "" },
+            { "7", "" },
+            { "Mode", "TeamDeathmatch" } };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+            colorDropDown.GetPhotonView().RPC(nameof(TankColorDropDownScript.ChangedModeChangeColor), RpcTarget.All, 0);
+        }
     } //done
     public void OnGameTimeChanged()
     {
-        PlayerPrefs.SetString("Time", gameTime.GetComponent<Dropdown>().options[gameTime.GetComponent<Dropdown>().value].text);
+        string time = gameTime.GetComponent<Dropdown>().options[gameTime.GetComponent<Dropdown>().value].text;
+        PlayerPrefs.SetString("Time", time);
+
+        ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
+        table.Add("Time", time);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(table);
     } //done
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -103,7 +153,11 @@ public class RoomController : MonoBehaviourPunCallbacks
         {
             PlayerPrefs.SetString("Type", "Serwer");
             PhotonNetwork.CurrentRoom.IsOpen = true; // tylko dla debuggingu
-            PhotonNetwork.LoadLevel("GameScene");
+
+            if (PhotonNetwork.CurrentRoom.CustomProperties["Mode"].ToString() == "Deathmatch")
+                PhotonNetwork.LoadLevel("GameScene");
+            else if (PhotonNetwork.CurrentRoom.CustomProperties["Mode"].ToString() == "TeamDeathmatch")
+                PhotonNetwork.LoadLevel("TeamScene");
         }
     }
 
@@ -114,7 +168,6 @@ public class RoomController : MonoBehaviourPunCallbacks
     } //done
     public void BackOnClick()
     {
-        colorDropDown.SetActive(false);
         roomPanel.SetActive(false);
         lobbyPanel.SetActive(true);
         PhotonNetwork.LeaveRoom();

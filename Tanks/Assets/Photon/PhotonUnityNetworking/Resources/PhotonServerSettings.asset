@@ -35,5 +35,8 @@ MonoBehaviour:
   - AddDamage
   - PlaySound
   - AddPoints
+  - SetSpecialActiveForAllPlayers
+  - ChangedModeChangeColor
+  - SetTankColor
   DisableAutoOpenWizard: 1
   ShowSettings: 0

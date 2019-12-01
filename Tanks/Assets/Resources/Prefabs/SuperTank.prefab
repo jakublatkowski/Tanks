@@ -54,7 +54,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639111515567824279}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0, y: -0.02684, z: 0.00047}
+  m_LocalPosition: {x: -0, y: -0.02536, z: 0.00047}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9201080865368230463}
@@ -266,6 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44636e766ae83a842aaae4ad838fb76e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  specialPrefab: {fileID: 0}
   bulletGenerator: {fileID: 281878171381172133}
   barrel: {fileID: 4367415128093617349}
   explosionSoundEffect: {fileID: 8300000, guid: 8524588a69a4f3e40bb597b6221138f1,
@@ -280,7 +281,7 @@ MonoBehaviour:
   cameraPositionYRatio: 0.237
   cameraPositionZRatio: 1
   healthPoints: 100
-  maxSpecialBulletCount: 10
+  maxSpecialBulletCount: 3
   maxTimeSpecialActive: 50
 --- !u!114 &3397062703862121674
 MonoBehaviour:

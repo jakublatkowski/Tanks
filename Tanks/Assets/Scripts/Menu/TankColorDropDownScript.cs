@@ -15,24 +15,14 @@ public class TankColorDropDownScript : MonoBehaviourPun
 
     [SerializeField]
     private GameObject Label;
-
-    [SerializeField]
-    public List<string> ListOfItems = new List<string>();
-
+    
+    private int direction = 1;
     private int _currentIndex;
     private int CurrentIndex
     {
         get { return _currentIndex; }
         set
         {
-            if (value > ListOfItems.Count)
-            {
-                value = 0;
-            }
-            if (value < 0)
-            {
-                value = ListOfItems.Count;
-            }
             int oldValue = _currentIndex;
             _currentIndex = value;
             OnCurrentIndexChanged(oldValue);
@@ -40,62 +30,113 @@ public class TankColorDropDownScript : MonoBehaviourPun
     }
     public void Click(GameObject button)
     {
-        if (ListOfItems.Count == 0) return;
         if (button == RightArrow)
         {
             CurrentIndex++;
+            direction = 1;
         }
         else if (button == LeftArrow)
         {
             CurrentIndex--;
+            direction = -1;
         }
     }
 
     private void OnCurrentIndexChanged(int oldValue)
     {
-        ListOfItems.Clear();
-        for (int j = 0; j < 8; j++)
+        string mode = PhotonNetwork.CurrentRoom.CustomProperties["Mode"].ToString();
+        if (mode == "Deathmatch")
         {
-            if (PhotonNetwork.CurrentRoom.CustomProperties[j.ToString()].ToString() != "")
-                ListOfItems.Add(PhotonNetwork.CurrentRoom.CustomProperties[j.ToString()].ToString());
+            string currentItem = Label.GetComponent<Text>().text;
+            if (currentItem != "")
+            {
+                ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
+                for (int i = 0; i < 8; i++)
+                {
+                    if (i == oldValue)
+                        table.Add(i.ToString(), currentItem);
+                    else
+                        table.Add(i.ToString(), PhotonNetwork.CurrentRoom.CustomProperties[i.ToString()].ToString());
+                }
+                PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+            }
         }
 
-        GetComponentInParent<PhotonView>().RPC(nameof(this.AddToList), RpcTarget.All, Label.GetComponent<Text>().text, oldValue);
-        Label.GetComponent<Text>().text = ListOfItems[CurrentIndex];
-        GetComponentInParent<PhotonView>().RPC(nameof(this.RemoveFromList), RpcTarget.All, CurrentIndex);
-
-        PlayerPrefs.SetString("Color", Label.GetComponent<Text>().text);
-
-
-        ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
-        int i = 0;
-        for (; i < ListOfItems.Count; i++)
+        while (true)
         {
-            table.Add(i.ToString(), ListOfItems[i]);
+            string item = PhotonNetwork.CurrentRoom.CustomProperties[CurrentIndex.ToString()]?.ToString();
+            if (item != null && item != "")
+            {
+                Label.GetComponent<Text>().text = item;
+                PlayerPrefs.SetString("Color", item);
+
+                if (mode == "Deathmatch")
+                {
+                    ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (i == CurrentIndex)
+                            table.Add(i.ToString(), "");
+                        else
+                            table.Add(i.ToString(), PhotonNetwork.CurrentRoom.CustomProperties[i.ToString()].ToString());
+                    }
+                    PhotonNetwork.CurrentRoom.SetCustomProperties(table);
+                }
+                break;
+            }
+            else
+            {
+                if (_currentIndex > 7) _currentIndex = 0;
+                else if (_currentIndex < 0)
+                {
+                    if (mode == "TeamDeathmatch")
+                        _currentIndex = 1;
+                    else if (mode == "Deathmatch")
+                        _currentIndex = 7;
+                }
+                else
+                    _currentIndex += direction; 
+            }
         }
-        for (; i < 8; i++)
-        {
-            table.Add(i.ToString(), "");
-        }
-        PhotonNetwork.CurrentRoom.SetCustomProperties(table);
     }
     private void Start()
     {
+        Init();
+    }
+    public void Init()
+    {
+        Label.GetComponent<Text>().text = "";
         CurrentIndex = 0;
     }
+
     [PunRPC]
-    private void RemoveFromList(int indeks)
+    public void ChangedModeChangeColor(int indeks)
     {
-        ListOfItems.RemoveAt(indeks);
+        CurrentIndex = indeks;
     }
-    [PunRPC]
-    private void AddToList(string component, int indeks)
+
+    public static Color GetColorFromName(string name)
     {
-        if (component == "") return;
-        ListOfItems.Insert(indeks, component);
-    }
-    private void OnDisable()
-    {
-        ListOfItems.Clear();
+        switch (name)
+        {
+            case "Red":
+                return new Color(0.8f, 0.0f, 0.0f);
+            case "Blue":
+                return new Color(0.0f, 0.0f, 0.8f);
+            case "Green":
+                return new Color(0.0f, 0.8f, 0.0f);
+            case "Yellow":
+                return new Color(0.8f, 0.8f, 0.0f);
+            case "White":
+                return new Color(0.8f, 0.8f, 0.8f);
+            case "Black":
+                return new Color(0.0f, 0.0f, 0.0f);
+            case "Magenta":
+                return new Color(0.8f, 0.0f, 0.8f);
+            case "Purple":
+                return new Color(0.0f, 0.8f, 0.8f);
+            default:
+                return new Color(0.0f, 0.0f, 0.0f);
+        }
     }
 }

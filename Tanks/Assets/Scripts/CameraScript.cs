@@ -6,6 +6,7 @@ using UnityEngine;
 public class CameraScript : MonoBehaviour
 {
     Vector3 offset;
+    private bool computer = false;
 
     public GameObject WatchedTank { get; set; }
 
@@ -28,7 +29,14 @@ public class CameraScript : MonoBehaviour
 
     void LateUpdate()
     {
+        if (computer)
+        {
+            transform.LookAt(new Vector3(0, 0));
+            transform.RotateAround(Vector3.zero, Vector3.up, 10 * Time.deltaTime);
+        };
+
         if (WatchedTank == null) return;
+
         var tankControllerTransform = WatchedTank.transform;
 
         SetUpCameraPosition(tankControllerTransform);
@@ -59,5 +67,16 @@ public class CameraScript : MonoBehaviour
         };
 
         offset = tankTransform.transform.position - transform.position;
+    }
+
+    public void SetUpComputerCamera()
+    {
+        computer = true;
+        ////gameObject.transform.position = new Vector3(0,100,-8);
+        ////gameObject.transform.rotation = new Quaternion(.7f,0,0,.7f);
+
+        //var comera = gameObject.GetComponent<Camera>();
+        ////comera.orthographic = true;
+        ////comera.orthographicSize = 270;
     }
 }
