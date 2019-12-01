@@ -103,7 +103,7 @@ public class RoomController : MonoBehaviourPunCallbacks
             { "4", "White" },
             { "5", "Black" },
             { "6", "Magenta" },
-            { "7", "Purple" },
+            { "7", "Cyan" },
             { "Mode", "Deathmatch" } };
             PhotonNetwork.CurrentRoom.SetCustomProperties(table);
             for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)

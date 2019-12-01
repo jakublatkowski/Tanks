@@ -11,6 +11,6 @@ namespace Assets.Scripts
         public const string White = "White";
         public const string Black = "Black";
         public const string Magenta = "Magenta";
-        public const string Purple = "Purple";
+        public const string Cyan = "Cyan";
     }
 }

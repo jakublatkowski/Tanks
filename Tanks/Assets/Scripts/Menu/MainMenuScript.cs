@@ -97,7 +97,7 @@ public class MainMenuScript : MonoBehaviourPunCallbacks
             { "4", "White" },
             { "5", "Black" },
             { "6", "Magenta" },
-            { "7", "Purple" },
+            { "7", "Cyan" },
             { "Mode", "Deathmatch" },
             { "Time", "1 min" } };
         RoomOptions roomOpt = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize, CustomRoomProperties = table };

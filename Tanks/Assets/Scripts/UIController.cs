@@ -27,7 +27,7 @@ public class UIController : MonoBehaviour
     public GameObject whitePanel;
     public GameObject blackPanel;
     public GameObject magentaPanel;
-    public GameObject purplePanel;
+    public GameObject cyanPanel;
 
     [Header("Controls")]
     public Joystick leftJoystick;
@@ -97,7 +97,7 @@ public class UIController : MonoBehaviour
         whitePanel.GetComponentInChildren<Text>().text = pointsController.WhitePoints.ToString();
         blackPanel.GetComponentInChildren<Text>().text = pointsController.BlackPoints.ToString();
         magentaPanel.GetComponentInChildren<Text>().text = pointsController.MagentaPoints.ToString();
-        purplePanel.GetComponentInChildren<Text>().text = pointsController.PurplePoints.ToString();
+        cyanPanel.GetComponentInChildren<Text>().text = pointsController.CyanPoints.ToString();
     }
 
     void Start()
